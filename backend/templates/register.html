@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+</head>
+<body>
+  <div id="container">
+    <form name="Register" method='POST' action='/register'>
+        {{form.csrf_token}}
+        <label for="fname" style="font-size:large;">Full Name</label><br>
+        {{form.name(size=30)}}<br><br>
+        <label for="birthday" style="font-size:large;">Birthday</label><br>
+        {{form.birthday(size=30)}}<br><br>
+        <label for="gender" style="font-size:large;">Gender</label><br>
+        {{form.gender(size=30)}}<br><br>
+        <label for="email" style="font-size:large;">Email</label><br>
+        {{form.email(size=30)}}<br><br>
+        <label for="username" style="font-size:large;">Username</label><br>
+        {{form.username(size=30)}}<br><br>
+        <label for="password" style="font-size:large;">Password</label><br>
+        {{form.password(size=30)}}<br><br>
+        <button type="submit" id="send">Submit</button>
+    </form>
+  </div>
+</body>
+</html>
