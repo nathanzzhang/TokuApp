@@ -1,6 +1,5 @@
 import os
 import sqlite3
-import data as data
 import datetime
 import models as models
 import jwt as jwt_decode
