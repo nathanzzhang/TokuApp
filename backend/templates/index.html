@@ -46,25 +46,15 @@
     <div id = "right">
       <img src= "https://kirbiecravings.com/wp-content/uploads/2018/08/salt-pepper-tofu-12.jpg">
 
-    {% for key, value in facts.items() %}
-      <p class="facts">{{key}}: {{value}}</p>
-    {% endfor %}
+    
       <p>Welcome to Tōku!</p> <br>
 
     <input type="text" id="title"><br>
     <input type="text" id="description"><br>
     <div class="ui button" id="post-button">Post</div>
-    {% for post in posts %}
-      <div class="post">
-        <div class="ui segment">
-          <h3>{{post['title']}}</h3>
-          <p>{{post['description']}}</p>
-        </div>
-      </div>
-    {% endfor %}
-    <p>Click this button for a random cat 🐱</p>
-    <button style="margin-bottom: 10px;"id="cat-button" type="button">CAT</button>
-    <div id="cat-div"></div>
+    
+  
+
       <p1>basic information about Tōku</p1>
   </div>
 

@@ -11,46 +11,54 @@
     <h1>Register</h1>
     <div class="row">
         <div class="column">
-            <form>
+            <form name="Register" method='POST' action='/register'>
+                {{form.csrf_token}}
                 <div class="signup">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="nameinput" placeholder="Jane Doe">
+                    {{form.name(size=30)}}<br><br>
+                    <!--input type="text" class="form-control" id="nameinput" placeholder="Jane Doe"-->
                 </div>
         
                 <div class="signup">
                     <label for="birthday">Birthday</label>
-                    <input type="date" class="form-control" id="birthdayinput" placeholder="01/01/2000">
+                    {{form.birthday(size=30)}}<br><br>
+                    <!--input type="date" class="form-control" id="birthdayinput" placeholder="01/01/2000"-->
                 </div>
         
                 <div class="signup">
                   <label for="gender">Gender</label>
-                  <select class="form-control" id="genderinput">
+                  {{form.gender(size=30)}}<br><br>
+                  <!--select class="form-control" id="genderinput">
                     <option>Male</option>
                     <option>Female</option>
                     <option>Nonbinary</option>
                     <option>Prefer not to answer</option>
-                  </select>
+                  </select--> 
                 </div>
         
                 <div>
                     <label for="email address">Email address</label>
-                    <input type="email" class="form-control" id="emailinput" placeholder="yourname@gmail.com">
+                    {{form.email(size=30)}}<br><br>
+                    <!--input type="email" class="form-control" id="emailinput" placeholder="yourname@gmail.com"-->
                 </div>
         
                 <div>
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="usernameinput">
+                    {{form.username(size=30)}}<br><br>
+                    <!--input type="text" class="form-control" id="usernameinput"-->
                 </div>
         
                 <div>
                     <label for="password">Password</label>
-                    <input type="password" class="" id="passwordinput">
+                    {{form.password(size=30)}}
+                    <!--input type="password" class="" id="passwordinput"-->
                 </div>
         
-                <div>
+                <!--div>
                     <label for="confirmpassword">Confirm Password</label>
                     <input type="password" class="" id="confirmpasswordinput">
-                </div>   
+                </div-->
+                <button type="submit" id="submit">Submit</button>   
             </form>
 
         </div>
