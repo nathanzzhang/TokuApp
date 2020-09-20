@@ -52,9 +52,14 @@ class Post(db.Model):
 	description = db.Column(db.String(500))
 
 class Friend(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String, nullable=False)
-	user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+	username = db.Column(db.String, primary_key=True)
+	name = db.Column(db.String)
+	languages = db.Column(db.String)
+	def __init__(self, username, name, languages):
+		self.username=username
+		self.name=name
+		self.languages=languages
+
 
 	def to_dict(self):
 		"""return dictionary representation of Friend"""
@@ -63,14 +68,14 @@ class Friend(db.Model):
 			"name": self.name,
 		}
 
-class UserForm(FlaskForm):
-	name = StringField(label="name", validators=[validators.DataRequired()])
-	birthday = StringField(label="birthday", validators=[validators.DataRequired()])
-	gender = StringField(label="gender")
-	email = StringField(label="email", validators=[validators.DataRequired()])
-	username = StringField(label="username", validators=[validators.DataRequired()])
-	password = StringField(label="password", validators=[validators.DataRequired()])
-	submit = SubmitField(label="submit")
+# class UserForm(FlaskForm):
+# 	name = StringField(label="name", validators=[validators.DataRequired()])
+# 	birthday = StringField(label="birthday", validators=[validators.DataRequired()])
+# 	gender = StringField(label="gender")
+# 	email = StringField(label="email", validators=[validators.DataRequired()])
+# 	username = StringField(label="username", validators=[validators.DataRequired()])
+# 	password = StringField(label="password", validators=[validators.DataRequired()])
+# 	submit = SubmitField(label="submit")
 
 class Blacklist(db.Model):
 	jwt_token = db.Column(db.String, unique=True, nullable=False, primary_key=True)
