@@ -13,11 +13,11 @@
         <form name="Login" method='POST' action='/login'>
             <p>  
                 <label for="username"> Username: </label>
-                <input type="username" id="username_input" placeholder="Username"> 
+                <input type="username" id="username" name="username" placeholder="Username"> 
             </p>
             <p>
                 <label for="password"> Password: </label>
-                <input type="password" id="password_input" placeholder="Password"> 
+                <input type="password" id="password" name="password" placeholder="Password"> 
                 <input type="checkbox" onclick="showPassword()">Show Password
             </p>
             <p>
@@ -26,7 +26,7 @@
   </div>
     <script> 
         function showPassword(){
-            var x = document.getElementById("passowrd_input");
+            var x = document.getElementById("password_input");
                 if (x.type === "password") {
                     x.type = "text";
                  } else {

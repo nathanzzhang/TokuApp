@@ -91,7 +91,7 @@ def login():
         user.current_token = decoded["jti"]
         db.session.commit()
 
-    return render_template("profile.html", name=name)
+    return render_template("login.html")
 
 @app.route("/logout", methods=["DELETE"])
 @jwt_required
