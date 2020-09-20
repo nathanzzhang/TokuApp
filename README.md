@@ -1,6 +1,6 @@
 # HackMIT App
 
-<img src="https://i.ibb.co/dgdbd2K/with-rails.png" alt="with-rails" width="100%" border="0" />
+<img src="https://i.ibb.co/X50TY4G/T-kuLogo.png" alt="with-rails" width="100%" border="0" />
 
 ## Tōku
 
