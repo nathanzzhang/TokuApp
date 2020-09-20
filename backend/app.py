@@ -48,7 +48,6 @@ def register():
         password = req.get("password")
         confirm_password = req.get("confirmpassword")
         access_token = (password == confirm_password)
-        print(access_token)
         name = req.get("name")
         birthday = req.get("birthday")
         gender = req.get("gender")
