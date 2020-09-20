@@ -5,17 +5,18 @@ img {
     height: 200px;
 }
 body {    
-    margin: 0 !important;
-    padding: 0 !important;
+    background:beige;
+    margin: 20px !important;
+    padding: 20px;
     font-family: 'Josefin Sans', cursive;
 }
 h1 {
-    background-color: rgb(65, 235, 161);
+    font-family: 'Josefin Sans', cursive;
+    background-color:#f48b6d;
     font-size: 70px;
     text-align: center; 
-    margin: 0;
+    margin: 40px;
     line-height: 1.28571429em;; 
-    height: 90px; 
     width: auto;
 }
 p {
