@@ -5,6 +5,7 @@
 
 #sidebar {
     width: 250px;
+    text-align: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -14,3 +15,4 @@
     color: #fff;
     transition: all 0.3s;
 }
+

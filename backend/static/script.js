@@ -17,7 +17,6 @@ $(document).ready(function() {
             window.location.reload();
         }
     });
-
     $("#sidebar").mCustomScrollbar({
         theme: "minimal"
     });

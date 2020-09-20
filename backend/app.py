@@ -118,6 +118,7 @@ def match():
     db.session.add(new_user)
     db.session.commit()
     return redirect(url_for("/friends", match=match)), 200
+<<<<<<< HEAD
     
 @app.route("/users", methods=["GET"])
 def get_users():
@@ -130,6 +131,8 @@ def get_users():
     """
     users = models.User.query.all()
     return jsonify([user.to_dict() for user in users])
+=======
+>>>>>>> d48c0e1... base debugging button
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
