@@ -5,18 +5,70 @@
 {% endblock %}
 
 {% block content %}
+  <h1>Profile Page</h1>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="">Tōku</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="#">Features</a>
-        <a class="nav-item nav-link" href="#">Pricing</a>
-        <a class="nav-item nav-link disabled" href="#">Disabled</a>
+        <a class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="/matchpage">Matches</a>
+        <a class="nav-item nav-link" href="/friends">Friends</a>
+        <a class="nav-item nav-link" href="#">Help/FAQ</a>
       </div>
     </div>
   </nav>
+  <div id="container">
+    <div class="circular"> 
+        <img src = "{{image_address}}"> <br>
+    </div>
+    <label class="profile_name" id="profile_name"> Jane Doe </label>
+    <div id="attributes">
+        <label class="profile_attributes" id="name" name="name"> Name: {{name}} </label> <br>
+        <label class="profile_attributes" id="birthday" name="birthday"> Birthday: {{birthday}} </label><br>
+        <label class="profile_attributes" id="gender" name="gender"> Gender: {{gender}} </label><br>
+        <label class="profile_attributes" id="email" name="email"> Email Address: {{email}} </label><br>
+        <label class="profile_attributes" id="date_created" name="date_created"> Date Created: {{date_created}} </label><br>
+      </div>
+    <div class="editPage" id="editProfilePage" >
+      <button type="button" id="Edit" onclick="toggleVisibility()"> Edit Profile </button>
+        <form name="Change Attributes" method='POST' action='/profile'>
+          <div class="signup" id= "hiddenInputs" style="display:none">
+            <label for="profilePicture"> Change Profile Picture </label>
+            <input type="text" class="form-control" id = "profilePic" name="profilePic" placeholder="sampleImageAddress.com"> <br>
+
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id = "changeName" name="name" placeholder="New Name"> <br>
+
+            <label for="birthday">Birthday</label>
+            <input type="date" class="form-control"  name="birthday" placeholder="1/1/2020">
+
+            <label for="gender">Gender</label>
+            <select id="changeGender" name="gender">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Nonbinary</option>
+              <option>Prefer not to answer</option>
+            </select> <br>
+
+            <label for="email address">Email address</label>
+            <input type="email" class="form-control" id="changeEmail" name="email" placeholder="example@example.com"><br>
+            <button type="button" id="Submit" onclick="toggleVisibility()"> Submit Changes </button> 
+          </div>
+        </form>
+    </div>
+      <script>
+        function toggleVisibility() {
+          var x = document.getElementById("hiddenInputs");
+          if (x.style.display === "none") {
+            x.style.display = "block";
+          } else {
+            x.style.display = "none";
+          }       
+        }
+      </script>
+    </div>
+  </div>
 {% endblock%}

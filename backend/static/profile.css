@@ -1,0 +1,54 @@
+h1 {
+    padding: 30px;
+    background-color: #f48b6d;
+    text-align: center;
+}
+.circular {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .circular img {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+.profile_name {
+    width: auto;
+    height: auto;
+    margin: 20px; 
+    font-size: 2rem;
+}
+
+.navbar-nav{
+    padding: 20px;
+    margin: 20px;
+    font-size: 1.5rem;
+    font-family: 'Josefin Sans', cursive;
+    position: relative;
+}
+.navbar-brand{
+  padding: 20px;
+    margin: 20px;
+    font-size: 2rem;
+    font-family: 'Josefin Sans', cursive;
+    position: relative;
+}
+
+.editPage{
+  margin: auto;
+  text-align: center;
+}

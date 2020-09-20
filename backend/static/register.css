@@ -27,7 +27,9 @@ h1 {
   /*.languages{
     display: inline-block;
   }*/
-
+  #row {
+    font-size: 30px;
+  }
   select {
     width: 100%;
     padding: 12px 12px;
