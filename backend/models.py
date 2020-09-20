@@ -30,6 +30,8 @@ class User(db.Model):
 		self.user_languages = user_languages
 	def set_match_languages(self, match_languages):
 		self.match_languages = match_languages
+	def set_current_token(self, current_token):
+		self.current_token = current_token
 
 	def check_password(self, password):
 		return check_password_hash(self.password, password)

@@ -53,9 +53,8 @@ def register():
         email = req.get("email")
         friend = models.Friend(None, None, None, None)
 
-        access_token = create_access_token(identity=username)
-        decoded = jwt_decode.decode(access_token, verify=False)
-        current_token = decoded["jti"]
+        current_token = create_access_token(identity=username)
+        session['current_token'] = current_token 
 
         new_user = models.User(username, password, current_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), "", "", friend)
         
@@ -110,10 +109,11 @@ def login():
         if not user.password == password:
             return jsonify({"message": "Invalid password."}), 400
 
-        access_token = create_access_token(identity=username)
-        session['current_token'] = access_token
+        current_token = create_access_token(identity=username)
+        session['current_token'] = current_token
+        user.set_current_token(current_token)
         db.session.commit()
-    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, access_token=access_token), 200
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
 
 
 @app.route("/logout", methods=["PUT","GET"])
@@ -126,16 +126,15 @@ def logout():
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
     current_token = session['current_token']
-    username = request.args.get("username")
-    user = models.User.query.filter_by(username=username).first()
-    print(username)
-    if request.method == "PUT":
+    user = models.User.query.filter_by(current_token=current_token).first()
+    if request.method == "PUT" and form.validate_on_submit():
         req = request.form
         user.set_name(req.get('name'))
         user.set_birthday(req.get('birthday'))
         user.set_email(req.get('email'))
         user.set_gender(req.get('gender'))
-    return render_template("profile.html", name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    
+    return render_template("profile.html"), 200
 
         
 
@@ -145,26 +144,18 @@ def match():
     user = models.User.query.filter_by(current_token=current_token).first()
     match_usernames = []
     for language in user.match_languages:
-        matches = models.User.query.filter_by(language=language).all()
-        for match in matches:
-            if match.username is not user.username:
+        for match in models.User.query.all():
+            if (match.username is not user.username) and (language in match.user_languages):
                 match_usernames.append(match.username)
     # friend = models.Friend(id, username, name, languages, user_id)
     return jsonify({"matches":matches}), 200
 
-@app.route("/friends", methods=["POST"])
-@jwt_required
+@app.route("/friends", methods=["POST", "GET"])
 def get_friends():
     current_token = session['current_token']
     user = models.User.query.filter_by(current_token=current_token).first()
-
-    # if not request.is_json:
-    #     return jsonify({"message": "Missing JSON in request"}), 400
-    # title = request.json.get("title")
-    # body = request.json.get("body")
-
-    friends = Friend.query.filter_by(user_id=user.username).all()
-    return jsonify([friend.to_dict() for friend in friends]), 200
+    friends = models.Friend.query.filter_by(user_id=user.username).all()
+    return json.dumps([friend.username for friend in friends]), 200
 
     
 @app.route("/users", methods=["GET"])
