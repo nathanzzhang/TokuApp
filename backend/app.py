@@ -53,8 +53,8 @@ def register():
         birthday = req.get("birthday")
         gender = req.get("gender")
         email = req.get("email")
-        friend = models.Friend()
-        new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), None)
+        friend = models.Friend(None, None, None)
+        new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), friend)
         
         temp_user = models.User.query.filter_by(username=new_user.username).first()
         if temp_user:
@@ -117,7 +117,7 @@ def match():
     language = request.args.get('language')
     matches = models.Friend.query.filter_by(language=language).all()
     matches_dict = {match.username: match.username for match in matches}
-    
+
     return redirect(url_for("/friends", match=match)), 200
     
 @app.route("/users", methods=["GET"])

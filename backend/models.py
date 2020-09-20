@@ -31,7 +31,6 @@ class User(db.Model):
 		self.gender=gender
 		self.email=email
 		self.created=created
-		self.friends=friends
 
 	def to_dict(self):
 		"""returns dict representation of User"""
