@@ -5,7 +5,7 @@ import models as models
 import jwt as jwt_decode
 from flask import Flask, session, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 
 from flask_jwt_extended import (
     JWTManager,
@@ -37,7 +37,7 @@ def index():
 def check_if_token_in_blacklist(decrypted_token):
     jti = decrypted_token["jti"]
     username = decrypted_token["identity"]
-    return User.query.filter_by(username=username, current_token=jti).first() == None
+    return models.User.query.filter_by(username=username, current_token=jti).first() == None
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -48,24 +48,46 @@ def register():
         username = req.get("username", None)
         password = req.get("password", None)
         confirm_password = req.get("confirmpassword", None)
-        access_token = (password == confirm_password)
+        if not password == confirm_password:
+            return jsonify({"message": "Error, passwords don't match"}), 400
         name = req.get("name", None)
         birthday = req.get("birthday")
         gender = req.get("gender")
         email = req.get("email")
-        friend = models.Friend(None, None, None)
-        new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), friend)
+        friend = models.Friend(None, None, None, None)
+
+        access_token = create_access_token(identity=username)
+        decoded = jwt_decode.decode(access_token, verify=False)
+        current_token = decoded["jti"]
+
+        global new_user
+        new_user = models.User(username, password, current_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), "", "", friend)
         
         temp_user = models.User.query.filter_by(username=new_user.username).first()
         if temp_user:
             return jsonify({"message": "User already exists."}), 400
-        if not new_user.current_token:
-            return jsonify({"message": "Passwords don't match."}), 400
 
+    return redirect(url_for('languages')), 200
+
+@app.route('/languages', methods=["POST", "GET"])
+def languages():
+    if request.method == "GET":
+        return render_template("languages.html")
+    if request.method == "POST":
+        default = ["English", "Korean", "Japanese", "Chinese", "Spanish", "French"]
+        user_languages = []
+        match_languages = []
+        req = request.form
+        for language in default:
+            if(req.get(language + "1")):
+                user_languages.append(language)
+            if(req.get(language + "2")):
+                match_languages.append(language)
+        new_user.user_languages = str(user_languages).strip('[]')
+        new_user.match_languages = str(match_languages).strip('[]')
         db.session.add(new_user)
         db.session.commit()
-
-    return render_template('languages.html'), 200
+    return render_template("profile.html", name=new_user.name, birthday=new_user.birthday, gender=new_user.gender, date_created=new_user.created), 200
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -114,11 +136,36 @@ def protected():
 
 @app.route("/match", methods=["POST", "GET"])
 def match():
+    jti = get_raw_jwt().get("jti")
+    if not jti:
+        return jsonify({"message": "Missing Authorization Header"}), 400
+    user = models.User.query.filter_by(current_token=jti).first()
     language = request.args.get('language')
     matches = models.Friend.query.filter_by(language=language).all()
     matches_dict = {match.username: match.username for match in matches}
-
+    friend = models.Friend(id, username, name, languages, user_id)
+    user.poems.append(friend)
+    db.session.commit()
     return redirect(url_for("/friends", match=match)), 200
+
+@app.route("/friends", methods=["POST"])
+@jwt_required
+def get_friends():
+    jti = get_raw_jwt().get("jti")
+    if not jti:
+        return jsonify({"message": "Missing Authorization Header"}), 400
+    user = models.User.query.filter_by(current_token=jti).first()
+
+    # if not request.is_json:
+    #     return jsonify({"message": "Missing JSON in request"}), 400
+    # title = request.json.get("title")
+    # body = request.json.get("body")
+
+    
+    friends = Friend.query.filter_by(user_id=user).all()
+    return jsonify([friend.to_dict() for friend in friends])
+    return jsonify(message="Successfully created poem"), 200
+
     
 @app.route("/users", methods=["GET"])
 def get_users():

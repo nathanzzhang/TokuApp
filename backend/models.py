@@ -8,12 +8,14 @@ from wtforms import StringField, validators, SubmitField
 class User(db.Model):
 	username = db.Column(db.String, primary_key=True, unique=True, nullable=False)
 	password = db.Column(db.String)
-	current_token = db.Column(db.Boolean)
+	current_token = db.Column(db.String)
 	name = db.Column(db.String)
 	birthday = db.Column(db.String)
 	gender = db.Column(db.String)
 	email = db.Column(db.String)
 	created = db.Column(db.String, nullable=False),
+	user_languages = db.Column(db.String, nullable=False)
+	match_languages = db.Column(db.String, nullable=False)
 	friends = db.relationship("Friend", backref="user")
 
 	def set_password(self, password):
@@ -22,7 +24,7 @@ class User(db.Model):
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
 
-	def __init__(self, username, password, current_token, name, birthday, gender, email, created, friends):
+	def __init__(self, username, password, current_token, name, birthday, gender, email, created, user_languages, match_languages, friends):
 		self.username=username
 		self.password=password
 		self.current_token=current_token
@@ -31,6 +33,8 @@ class User(db.Model):
 		self.gender=gender
 		self.email=email
 		self.created=created
+		self.user_languages=user_languages
+		self.match_languages=match_languages
 
 	def to_dict(self):
 		"""returns dict representation of User"""
@@ -42,6 +46,8 @@ class User(db.Model):
 			"gender": self.gender,
 			"email": self.email,
 			"member_since": self.created,
+			"user languages": self.user_languages,
+			"match languages": self.match_languages,
 			"friends": [friend.to_dict() for friend in self.friends]
 		}
 
@@ -55,28 +61,22 @@ class Friend(db.Model):
 	username = db.Column(db.String)
 	name = db.Column(db.String)
 	languages = db.Column(db.String)
-	user_id = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
-	def __init__(self, username, name, languages):
+	user_id = db.Column(db.String, db.ForeignKey("user.username"))
+	def __init__(self, username, name, languages, user_id):
 		self.username=username
 		self.name=name
 		self.languages=languages
-
+		self.user_id=user_id
 
 	def to_dict(self):
 		"""return dictionary representation of Friend"""
 		return {
 			"id": self.id,
+			"username": self.username,
 			"name": self.name,
+			"languages": self.languages,
 		}
 
-# class UserForm(FlaskForm):
-# 	name = StringField(label="name", validators=[validators.DataRequired()])
-# 	birthday = StringField(label="birthday", validators=[validators.DataRequired()])
-# 	gender = StringField(label="gender")
-# 	email = StringField(label="email", validators=[validators.DataRequired()])
-# 	username = StringField(label="username", validators=[validators.DataRequired()])
-# 	password = StringField(label="password", validators=[validators.DataRequired()])
-# 	submit = SubmitField(label="submit")
 
 class Blacklist(db.Model):
 	jwt_token = db.Column(db.String, unique=True, nullable=False, primary_key=True)
