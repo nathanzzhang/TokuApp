@@ -65,7 +65,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-    return render_template('profile.html', name=new_user.name), 200
+    return render_template('languages.html'), 200
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -114,11 +114,11 @@ def protected():
 
 @app.route("/match", methods=["POST", "GET"])
 def match():
-    match = models.Friend('test', 'test', 'test')
-    db.session.add(new_user)
-    db.session.commit()
+    language = request.args.get('language')
+    matches = models.Friend.query.filter_by(language=language).all()
+    matches_dict = {match.username: match.username for match in matches}
+    
     return redirect(url_for("/friends", match=match)), 200
-<<<<<<< HEAD
     
 @app.route("/users", methods=["GET"])
 def get_users():
@@ -131,8 +131,6 @@ def get_users():
     """
     users = models.User.query.all()
     return jsonify([user.to_dict() for user in users])
-=======
->>>>>>> d48c0e1... base debugging button
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
