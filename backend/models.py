@@ -52,9 +52,11 @@ class Post(db.Model):
 	description = db.Column(db.String(500))
 
 class Friend(db.Model):
-	username = db.Column(db.String, primary_key=True)
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String)
 	name = db.Column(db.String)
 	languages = db.Column(db.String)
+	user_id = db.Column(db.String, db.ForeignKey("user.username"), nullable=False)
 	def __init__(self, username, name, languages):
 		self.username=username
 		self.name=name
