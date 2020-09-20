@@ -53,6 +53,7 @@ def register():
         birthday = req.get("birthday")
         gender = req.get("gender")
         email = req.get("email")
+        friend = models.Friend()
         new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), None)
         
         temp_user = models.User.query.filter_by(username=new_user.username).first()
@@ -68,6 +69,8 @@ def register():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    if request.method == "GET":
+        return render_template("login.html"), 200
     if request.method == "POST":
         req = request.form
         username = req.get("username", None)
@@ -84,8 +87,6 @@ def login():
             return jsonify({"message": "User not found."}), 400
 
         if not temp_user.password == password:
-            print(temp_user.password)
-            print(password)
             return jsonify({"message": "Invalid password."}), 400
 
         user = temp_user
@@ -93,7 +94,6 @@ def login():
         decoded = jwt_decode.decode(access_token, verify=False)
         user.current_token = decoded["jti"]
         db.session.commit()
-
     return jsonify({"message": "Success"}), 200
 
 @app.route("/logout", methods=["DELETE"])
@@ -101,10 +101,16 @@ def login():
 def logout():
     """Endpoint for revoking the current users access token"""
     jti = get_raw_jwt().get("jti")
-    u = models.User.query.filter_by(current_token=jti)
-    u.current_token = None
+    user = models.User.query.filter_by(current_token=jti)
+    user.current_token = None
     db.session.commit()
-    return jsonify({"msg": "Successfully logged out"}), 200
+    return jsonify({"message": "Successfully logged out"}), 200
+
+@app.route("/protected", methods=["GET"])
+@jwt_required
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
 
 @app.route("/match", methods=["POST", "GET"])
 def match():
@@ -113,6 +119,17 @@ def match():
     db.session.commit()
     return redirect(url_for("/friends", match=match)), 200
     
+@app.route("/users", methods=["GET"])
+def get_users():
+    """
+    Endpoint that returns all users
+
+    responses:
+        200:
+        all users as list
+    """
+    users = models.User.query.all()
+    return jsonify([user.to_dict() for user in users])
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -14,7 +14,7 @@ class User(db.Model):
 	gender = db.Column(db.String)
 	email = db.Column(db.String)
 	created = db.Column(db.String, nullable=False),
-	friends = db.Column(db.String) #change to relationship later
+	friends = db.relationship("Friend", backref="user")
 
 	def set_password(self, password):
 		self.password = generate_password_hash(password)
@@ -79,3 +79,7 @@ class Friend(db.Model):
 
 class Blacklist(db.Model):
 	jwt_token = db.Column(db.String, unique=True, nullable=False, primary_key=True)
+
+
+
+
