@@ -47,7 +47,8 @@ def register():
         username = req.get("username")
         password = req.get("password")
         confirm_password = req.get("confirmpassword")
-        access_token = password == confirm_password
+        access_token = (password == confirm_password)
+        print(access_token)
         name = req.get("name")
         birthday = req.get("birthday")
         gender = req.get("gender")
@@ -56,7 +57,7 @@ def register():
         user = models.User.query.filter_by(username=new_user.username).first()
         if user:
             return jsonify({"message": "User already exists."}), 400
-        if new_user.access_token:
+        if not new_user.current_token:
             return jsonify({"message": "Passwords don't match."}), 400
         db.session.add(new_user)
         db.session.commit()
