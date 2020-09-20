@@ -26,6 +26,9 @@ p {
     font-size: 1.25em;
 }
 
+#container {
+    text-align: center;
+}
 #color {
     color: blue;
 }
