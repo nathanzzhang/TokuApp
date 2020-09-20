@@ -83,15 +83,18 @@ def login():
         if not temp_user:
             return jsonify({"message": "User not found."}), 400
 
-        if not temp_user.check_password(password):
+        if not temp_user.password == password:
+            print(temp_user.password)
+            print(password)
             return jsonify({"message": "Invalid password."}), 400
 
-        access_token = create_access_token(identity=username)
+        user = temp_user
+        access_token = create_access_token(identity=user.username)
         decoded = jwt_decode.decode(access_token, verify=False)
         user.current_token = decoded["jti"]
         db.session.commit()
 
-    return render_template("login.html")
+    return jsonify({"message": "Success"}), 200
 
 @app.route("/logout", methods=["DELETE"])
 @jwt_required
