@@ -18,8 +18,20 @@ class User(db.Model):
 	match_languages = db.Column(db.String, nullable=False)
 	friends = db.relationship("Friend", backref="user")
 
-	def set_password(self, password):
-		self.password = generate_password_hash(password)
+	def set_name(self, name):
+		self.name = name
+	def set_email(self, email):
+		self.email = email
+	def set_birthday(self, birthday):
+		self.birthday = birthday
+	def set_gender(self, gender):
+		self.gender = gender
+	def set_user_languages(self, user_languages):
+		self.user_languages = user_languages
+	def set_match_languages(self, match_languages):
+		self.match_languages = match_languages
+	def set_current_token(self, current_token):
+		self.current_token = current_token
 
 	def check_password(self, password):
 		return check_password_hash(self.password, password)
@@ -48,7 +60,7 @@ class User(db.Model):
 			"member_since": self.created,
 			"user languages": self.user_languages,
 			"match languages": self.match_languages,
-			"friends": [friend.to_dict() for friend in self.friends]
+			
 		}
 
 class Post(db.Model):
@@ -82,5 +94,6 @@ class Blacklist(db.Model):
 	jwt_token = db.Column(db.String, unique=True, nullable=False, primary_key=True)
 
 
-
+def jti(username):
+	return User.query.filter_by(username=username).current_token
 

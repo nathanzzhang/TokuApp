@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import datetime
+import json
 import models as models
 import jwt as jwt_decode
 from flask import Flask, session, request, jsonify
@@ -24,6 +25,7 @@ db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
 DEBUG = True
+blacklist = set()
 
 
 @app.route("/")
@@ -33,11 +35,6 @@ def index():
     return render_template("index.html")
 
 
-@jwt.token_in_blacklist_loader
-def check_if_token_in_blacklist(decrypted_token):
-    jti = decrypted_token["jti"]
-    username = decrypted_token["identity"]
-    return models.User.query.filter_by(username=username, current_token=jti).first() == None
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
@@ -56,21 +53,20 @@ def register():
         email = req.get("email")
         friend = models.Friend(None, None, None, None)
 
-        access_token = create_access_token(identity=username)
-        decoded = jwt_decode.decode(access_token, verify=False)
-        current_token = decoded["jti"]
+        current_token = create_access_token(identity=username)
+        session['current_token'] = current_token 
 
-        global new_user
         new_user = models.User(username, password, current_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), "", "", friend)
         
         temp_user = models.User.query.filter_by(username=new_user.username).first()
         if temp_user:
             return jsonify({"message": "User already exists."}), 400
-
-    return redirect(url_for('languages')), 200
+    return render_template("languages.html",username=username), 200
 
 @app.route('/languages', methods=["POST", "GET"])
 def languages():
+    username = request.args.get('username')
+    user = models.User.query.filter_by(username=username).first()
     if request.method == "GET":
         return render_template("languages.html")
     if request.method == "POST":
@@ -79,15 +75,19 @@ def languages():
         match_languages = []
         req = request.form
         for language in default:
+            print(req.get(language+"1"))
             if(req.get(language + "1")):
                 user_languages.append(language)
             if(req.get(language + "2")):
                 match_languages.append(language)
-        new_user.user_languages = str(user_languages).strip('[]')
-        new_user.match_languages = str(match_languages).strip('[]')
-        db.session.add(new_user)
-        db.session.commit()
-    return render_template("profile.html", name=new_user.name, birthday=new_user.birthday, gender=new_user.gender, date_created=new_user.created), 200
+        if user_languages and match_languages:
+            user.user_languages.set_user_languages(str(user_languages).strip('[]'))
+            user.match_languages.set_match_languages(str(match_languages).strip('[]'))
+            db.session.add(new_user)
+            db.session.commit()
+        else:
+            return jsonify({"message": "Must select at least one language for both"})
+    return redirect('/profile'), 200
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -103,81 +103,65 @@ def login():
         if not password:
             return jsonify({"message": "Password is required."}), 400
 
-        temp_user = models.User.query.filter_by(username=username).first()
-
-        if not temp_user:
+        user = models.User.query.filter_by(username=username).first()
+        if not user:
             return jsonify({"message": "User not found."}), 400
-
-        if not temp_user.password == password:
+        if not user.password == password:
             return jsonify({"message": "Invalid password."}), 400
 
-        user = temp_user
-        access_token = create_access_token(identity=user.username)
-        decoded = jwt_decode.decode(access_token, verify=False)
-        user.current_token = decoded["jti"]
+        current_token = create_access_token(identity=username)
+        session['current_token'] = current_token
+        user.set_current_token(current_token)
         db.session.commit()
-    return render_template("profile.html"), 200
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
 
-@app.route("/logout", methods=["DELETE"])
-@jwt_required
+
+@app.route("/logout", methods=["PUT","GET"])
 def logout():
     """Endpoint for revoking the current users access token"""
-    jti = get_raw_jwt().get("jti")
-    user = models.User.query.filter_by(current_token=jti)
-    user.current_token = None
-    db.session.commit()
-    return jsonify({"message": "Successfully logged out"}), 200
+    session.pop('current_token', None)
+    return render_template("index.html"), 200
 
-@app.route("/protected", methods=["GET"])
-@jwt_required
-def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+
+@app.route("/profile", methods=["POST", "GET"])
+def profile():
+    current_token = session['current_token']
+    user = models.User.query.filter_by(current_token=current_token).first()
+    if request.method == "PUT" and form.validate_on_submit():
+        req = request.form
+        user.set_name(req.get('name'))
+        user.set_birthday(req.get('birthday'))
+        user.set_email(req.get('email'))
+        user.set_gender(req.get('gender'))
+    
+    return render_template("profile.html"), 200
+
+        
 
 @app.route("/match", methods=["POST", "GET"])
 def match():
-    jti = get_raw_jwt().get("jti")
-    if not jti:
-        return jsonify({"message": "Missing Authorization Header"}), 400
-    user = models.User.query.filter_by(current_token=jti).first()
-    language = request.args.get('language')
-    matches = models.Friend.query.filter_by(language=language).all()
-    matches_dict = {match.username: match.username for match in matches}
-    friend = models.Friend(id, username, name, languages, user_id)
-    user.poems.append(friend)
-    db.session.commit()
-    return redirect(url_for("/friends", match=match)), 200
+    current_token = session['current_token']
+    user = models.User.query.filter_by(current_token=current_token).first()
+    match_usernames = []
+    for language in user.match_languages:
+        for match in models.User.query.all():
+            if (match.username is not user.username) and (language in match.user_languages):
+                match_usernames.append(match.username)
+    # friend = models.Friend(id, username, name, languages, user_id)
+    return jsonify({"matches":matches}), 200
 
-@app.route("/friends", methods=["POST"])
-@jwt_required
+@app.route("/friends", methods=["POST", "GET"])
 def get_friends():
-    jti = get_raw_jwt().get("jti")
-    if not jti:
-        return jsonify({"message": "Missing Authorization Header"}), 400
-    user = models.User.query.filter_by(current_token=jti).first()
-
-    # if not request.is_json:
-    #     return jsonify({"message": "Missing JSON in request"}), 400
-    # title = request.json.get("title")
-    # body = request.json.get("body")
-
-    
-    friends = Friend.query.filter_by(user_id=user).all()
-    return jsonify([friend.to_dict() for friend in friends])
-    return jsonify(message="Successfully created poem"), 200
+    current_token = session['current_token']
+    user = models.User.query.filter_by(current_token=current_token).first()
+    friends = models.Friend.query.filter_by(user_id=user.username).all()
+    return json.dumps([friend.username for friend in friends]), 200
 
     
 @app.route("/users", methods=["GET"])
 def get_users():
-    """
-    Endpoint that returns all users
-
-    responses:
-        200:
-        all users as list
-    """
     users = models.User.query.all()
-    return jsonify([user.to_dict() for user in users])
+    return json.dumps([user.username for user in users])
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
