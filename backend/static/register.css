@@ -1,6 +1,7 @@
 
 body {
     text-align: center;
+    background: #fef2ed;
 }
 form {
     display: inline-block;
@@ -8,8 +9,8 @@ form {
 
 h1 {
     margin-top: 50x;
-    padding: 200x 200x 200x 200x;
-    background-color: lightblue;
+    padding: 200x;
+    background-color: #f48b6d;
     text-align: center;
 }
 
@@ -25,7 +26,7 @@ h1 {
     padding: 12px 15px;
     border: none;
     border-radius: 4px;
-    background-color: whitesmoke
+    background-color:white;
   }
 
   input{
@@ -40,3 +41,12 @@ h1 {
       width: 50%
   }
 
+  #submit {
+    background-color: #e4532d;
+    border: none;
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 14px;
+  }

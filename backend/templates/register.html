@@ -10,7 +10,6 @@
 <body>
     <h1>Register</h1>
     <div class="row">
-        <div class="column">
             <form name="Register" method='POST' action='/register'>
                 <div class="signup">
                     <label for="name">Name</label>
@@ -24,7 +23,7 @@
         
                 <div class="signup">
                   <label for="gender">Gender</label>
-                  <select class="form-control" id="gender" name="gender">
+                  <select id="gender" name="gender">
                     <option>Male</option>
                     <option>Female</option>
                     <option>Nonbinary</option>
@@ -34,7 +33,7 @@
         
                 <div>
                     <label for="email address">Email address</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="yourname@gmail.com">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com">
                 </div>
         
                 <div>
@@ -51,25 +50,10 @@
                     <label for="confirmpassword">Confirm Password</label>
                     <input type="password" class="" id="confirmpassword" name="confirmpassword">
                 </div>
-                <button type="submit" id="submit">Submit</button>   
+                <button type="submit" id="submit">SUBMIT</button>   
             </form>
 
-        </div>
-        <div class="column"></div>
-            <form>
-                <div>
-                    <label for="language strengths">What languages are you strong in?</label>
-                        <input class="checkboxes" type="checkbox" value="" id="checks">
-                        <label class="check labels" for="defaultCheck1">
-                          English</label>
-                </select>
-            </div> 
-                
-            <button class="register button">Register</button>
-
-            </form>
-
-        </div>
+    </div>
     
 </body>
 </html>
