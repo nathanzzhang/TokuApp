@@ -17,6 +17,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SECRET_KEY = "".join([chr(random.randint(65, 92)) for _ in range(50)])
 JWT_BLACKLIST_ENABLED = True
 JWT_BLACKLIST_TOKEN_CHECKS = ["access", "refresh"]
+JWT_SECRET_KEY = ""
 
 # make data tables
 if not os.path.exists("app.db"):
@@ -26,4 +27,4 @@ print("Connecting to db")
 conn = sqlite3.connect("app.db")
 print("Saving data to db")
 conn.execute('CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, current_token TEXT, name TEXT, birthday TEXT, gender TEXT, email TEXT, created TEXT, user_languages TEXT, match_languages TEXT, friends TEXT)')
-conn.execute('CREATE TABLE IF NOT EXISTS friend (id INT, username TEXT, name TEXT, languages TEXT)')
+conn.execute('CREATE TABLE IF NOT EXISTS friend (id INT, username TEXT, name TEXT, languages TEXT, user_id TEXT)')
