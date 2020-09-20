@@ -53,13 +53,8 @@ def register():
         birthday = req.get("birthday")
         gender = req.get("gender")
         email = req.get("email")
-<<<<<<< HEAD
         friend = models.Friend(None, None, None)
         new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), friend)
-=======
-        friend = models.Friend()
-        new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), None)
->>>>>>> a7e4434208f3f8c2d616b497244bb02a7aff66cf
         
         temp_user = models.User.query.filter_by(username=new_user.username).first()
         if temp_user:
@@ -99,7 +94,7 @@ def login():
         decoded = jwt_decode.decode(access_token, verify=False)
         user.current_token = decoded["jti"]
         db.session.commit()
-    return jsonify({"message": "Success"}), 200
+    return render_template("profile.html"), 200
 
 @app.route("/logout", methods=["DELETE"])
 @jwt_required
@@ -108,7 +103,6 @@ def logout():
     jti = get_raw_jwt().get("jti")
     user = models.User.query.filter_by(current_token=jti)
     user.current_token = None
-<<<<<<< HEAD
     db.session.commit()
     return jsonify({"message": "Successfully logged out"}), 200
 
@@ -124,22 +118,6 @@ def match():
     matches = models.Friend.query.filter_by(language=language).all()
     matches_dict = {match.username: match.username for match in matches}
 
-=======
-    db.session.commit()
-    return jsonify({"message": "Successfully logged out"}), 200
-
-@app.route("/protected", methods=["GET"])
-@jwt_required
-def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
-
-@app.route("/match", methods=["POST", "GET"])
-def match():
-    match = models.Friend('test', 'test', 'test')
-    db.session.add(new_user)
-    db.session.commit()
->>>>>>> a7e4434208f3f8c2d616b497244bb02a7aff66cf
     return redirect(url_for("/friends", match=match)), 200
     
 @app.route("/users", methods=["GET"])

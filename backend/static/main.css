@@ -41,6 +41,9 @@ button {
     height:  50px;
 }
 
+#navbutton{
+    float: right;
+}
 
 .post {
     margin-top: 75px !important;

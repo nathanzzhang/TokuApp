@@ -1,67 +1,29 @@
 <!-- index.html at the end of workshop 2 -->
 
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Tōku App</title>
-  <link rel="stylesheet" href="../static/base.css">
-  <link rel="stylesheet" href="../static/main.css">
-<<<<<<< HEAD
-=======
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
->>>>>>> a7e4434208f3f8c2d616b497244bb02a7aff66cf
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="../static/script.js"></script>
-  {%block head %}{% endblock %}
-</head>
-<body>
-    <div id = "wrapper">
-      <nav id ="sidebar">
-        <div class="sidebar-header">
-          <h3>Tōku Menu</h3>
-        </div>
-
-        <u1 class="list-unstyled components">
-          <p> profile name goes here</p>
-          <li>
-            <a class="btn" href="#">Profile</a>
-          </li>
-          <li>
-            <a class="btn" href="#">Match</a>
-          </li>
-          <li>
-            <a class="btn" href="#">Community</a>
-          </li>
-          <li>
-            <a class="btn" href="#">Friends</a>
-          </li>
-          <li>
-            <a class="btn" href="#">Help/FAQ</a>
-          </li>
-        </u1>
-      </nav>
-       <!-- Page Content -->
-      <div id="content">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <button type="button" id="sidebarCollapse" class="btn btn-info">
-                    <i class="fas fa-align-left"></i>
-                    <span>Navigation Menu</span>
-                </button>
-            </div>
-        </nav>
-      {% block content %}{% endblock %}
-      {%block body %} {% endblock %}
-      </div>
-    </div>
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-    <!-- jQuery Custom Scroller CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Tōku App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/base.css">
+    <link rel="stylesheet" href="../static/main.css">
+    <link rel="stylesheet" href="../static/login.css">
+    <link rel="stylesheet" href="../static/register.css">
+    <link rel="stylesheet" href="../static/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="../static/script.js"></script>
+    {%block head %}{% endblock %}
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+    {%block body %} {% endblock %}
   </body>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </html>
 
