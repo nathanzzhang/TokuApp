@@ -36,7 +36,19 @@ h1 {
 .navbar-nav{
     padding: 20px;
     margin: 20px;
+    font-size: 1.5rem;
+    font-family: 'Josefin Sans', cursive;
+    position: relative;
+}
+.navbar-brand{
+  padding: 20px;
+    margin: 20px;
     font-size: 2rem;
     font-family: 'Josefin Sans', cursive;
     position: relative;
+}
+
+.editPage{
+  margin: auto;
+  text-align: center;
 }
