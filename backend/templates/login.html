@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login Page</title>
-  <link rel="stylesheet" href="../static/login.css">
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-  <script src="../static/script.js"></script>
-</head>
-<body>
+{% extends 'base.html'%}
+
+{%block head %}
+
+{% endblock %}
+
+{% block content %}
   <div id="container">
     <h1> Log In to Tōku</h1>
     <div id = "loginpage">
@@ -24,5 +22,4 @@
                 <button class="submitButton" id="submit_Button"> Submit </button>
             </p>
   </div>
-</body>
-</html>
+{% endblock%}
