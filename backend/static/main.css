@@ -18,40 +18,6 @@ h1 {
     height: 90px; 
     width: auto;
 }
-#container {
-    text-align: center;
-    width: 100%;
-    margin: 0;
-}
-#left {
-    width: 20%;
-    float: left;
-    height: 100%;
-    background-color: rgb(250, 167, 103);
-}
-#sidebar ul.components {
-    padding: 20px 0;
-    border-bottom: 1px solid #47748b;
-}
-
-#sidebar ul p {
-    color: #fff;
-    padding: 10px;
-    font-family: 'Amatic SC', cursive;
-    font-size: 50px;
-}
-#sidebar ul li a {
-    padding: 10px;
-    font-size: 1.1em;
-    display: block;
-}
-#right {
-    width: 80%;
-    float: right;
-    height: 100%;
-    background-color: white;
-}
-
 p {
     font-size: 1.5em;
 }
@@ -75,24 +41,3 @@ button {
     width: 50%;
     margin: auto;
 }
-
-/*  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-/* {% for key, value in facts.items() %}
-        <p class="facts">{{key}}: {{value}}</p>
-      {% endfor %}
-  
-      <input type="text" id="title"><br>
-      <input type="text" id="description"><br>
-      <div class="ui button" id="post-button">Post</div>
-      {% for post in posts %}
-        <div class="post">
-          <div class="ui segment">
-            <h3>{{post['title']}}</h3>
-            <p>{{post['description']}}</p>
-          </div>
-        </div>
-      {% endfor %}
-      <p>Click this button for a random cat 🐱</p>
-      <button style="margin-bottom: 10px;"id="cat-button" type="button">CAT</button>
-      <div id="cat-div"></div>
-    </div> 
