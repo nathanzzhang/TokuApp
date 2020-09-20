@@ -40,27 +40,26 @@ def check_if_token_in_blacklist(decrypted_token):
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
-    form = models.UserForm()
     if request.method == "GET":
-        return render_template("register.html", form=form), 200
+        return render_template("register.html"), 200
     if request.method == "POST":
-        if form.validate_on_submit():
-            if DEBUG:
-                print(form.username.data) # username
-                print(form.name.data)  # name
-                print(form.email.data)  # email
-            access_token = create_access_token(identity=form.username.data)
-            new_user = models.User(form.username.data, form.password.data, str(access_token), form.name.data, form.birthday.data, form.gender.data, form.email.data, str(datetime.datetime.utcnow()), None)
-            #new_user.set_password(password)
-            user = models.User.query.filter_by(username=new_user.username).first()
-            if user:
-                return jsonify({"message": "User already exists."}), 400
-            decoded = jwt_decode.decode(access_token, verify=False)
-            new_user.current_token = decoded["jti"]
-            db.session.add(new_user)
-            db.session.commit()
-        else:
-            return jsonify(message="Error"), 400
+        req = request.form
+        username = req.get("username")
+        password = req.get("password")
+        confirm_password = req.get("confirmpassword")
+        access_token = password == confirm_password
+        name = req.get("name")
+        birthday = req.get("birthday")
+        gender = req.get("gender")
+        email = req.get("email")
+        new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), None)
+        user = models.User.query.filter_by(username=new_user.username).first()
+        if user:
+            return jsonify({"message": "User already exists."}), 400
+        if new_user.access_token:
+            return jsonify({"message": "Passwords don't match."}), 400
+        db.session.add(new_user)
+        db.session.commit()
 
     return render_template('profile.html', name=new_user.name), 200
 

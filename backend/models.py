@@ -8,7 +8,7 @@ from wtforms import StringField, validators, SubmitField
 class User(db.Model):
 	username = db.Column(db.String, primary_key=True, unique=True, nullable=False)
 	password = db.Column(db.String)
-	current_token = db.Column(db.String)
+	current_token = db.Column(db.Boolean)
 	name = db.Column(db.String)
 	birthday = db.Column(db.String)
 	gender = db.Column(db.String)
