@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap" rel="stylesheet');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 
 img {
     width: 200px;
@@ -7,7 +7,7 @@ img {
 body {    
     margin: 0 !important;
     padding: 0 !important;
-    font-family: 'Amatic SC', cursive;
+    font-family: 'Josefin Sans', cursive;
 }
 h1 {
     background-color: rgb(65, 235, 161);
@@ -29,11 +29,18 @@ p {
 #container {
     text-align: center;
 }
+
 #color {
     color: blue;
 }
-#container {
+
+#languages{
     text-align: center;
+    width: 100%;
+    padding: 15px 15px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-size: 70 px;
 }
 
 button {
