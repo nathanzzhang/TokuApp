@@ -104,13 +104,12 @@ def login():
         if not password:
             return jsonify({"message": "Password is required."}), 400
 
-        temp_user = models.User.query.filter_by(username=username).first()
-        if not temp_user:
+        user = models.User.query.filter_by(username=username).first()
+        if not user:
             return jsonify({"message": "User not found."}), 400
-        if not temp_user.password == password:
+        if not user.password == password:
             return jsonify({"message": "Invalid password."}), 400
 
-        user = temp_user
         access_token = create_access_token(identity=username)
         session['current_token'] = access_token
         db.session.commit()
@@ -127,7 +126,9 @@ def logout():
 @app.route("/profile", methods=["POST", "GET"])
 def profile():
     current_token = session['current_token']
-    user = models.User.query.filter_by(current_token=current_token).first()
+    username = request.args.get("username")
+    user = models.User.query.filter_by(username=username).first()
+    print(username)
     if request.method == "PUT":
         req = request.form
         user.set_name(req.get('name'))

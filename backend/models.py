@@ -45,7 +45,6 @@ class User(db.Model):
 		self.created=created
 		self.user_languages=user_languages
 		self.match_languages=match_languages
-		self.friends=friends
 
 	def to_dict(self):
 		"""returns dict representation of User"""
@@ -59,7 +58,7 @@ class User(db.Model):
 			"member_since": self.created,
 			"user languages": self.user_languages,
 			"match languages": self.match_languages,
-			"friends": len(self.friends)
+			
 		}
 
 class Post(db.Model):
