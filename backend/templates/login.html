@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+  <link rel="stylesheet" href="../static/login.css">
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="../static/script.js"></script>
+</head>
+<body>
+  <div id="container">
+    <h1> Log In to Tōku</h1>
+    <div id = "loginpage">
+        <form name="Login" method='POST' action='/login'>
+            <p>  
+                <label for="username"> Username: </label>
+                <input type="username" id="username_input" placeholder="Username"> 
+            </p>
+            <p>
+                <label for="password"> Password: </label>
+                <input type="password" id="password_input" placeholder="Password"> 
+                <input type="checkbox" onclick="showPassword()">Show Password
+            </p>
+            <p>
+                <button class="submitButton" id="submit_Button"> Submit </button>
+            </p>
+  </div>
+    <script> 
+        function showPassword(){
+            var x = document.getElementById("passowrd_input");
+                if (x.type === "password") {
+                    x.type = "text";
+                 } else {
+                    x.type = "password";
+                }
+        }
+    </script>
+</body>
+</html>
