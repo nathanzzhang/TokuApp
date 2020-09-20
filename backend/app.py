@@ -25,6 +25,7 @@ db.app = app
 db.init_app(app)
 DEBUG = True
 
+
 @app.route("/")
 def index():
     db_users = models.User.query.all()
@@ -44,20 +45,23 @@ def register():
         return render_template("register.html"), 200
     if request.method == "POST":
         req = request.form
-        username = req.get("username")
-        password = req.get("password")
-        confirm_password = req.get("confirmpassword")
+        username = req.get("username", None)
+        password = req.get("password", None)
+        confirm_password = req.get("confirmpassword", None)
         access_token = (password == confirm_password)
-        name = req.get("name")
+        name = req.get("name", None)
         birthday = req.get("birthday")
         gender = req.get("gender")
         email = req.get("email")
+        friend = models.Friend()
         new_user = models.User(username, password, access_token, name, birthday, gender, email, str(datetime.datetime.utcnow()), None)
-        user = models.User.query.filter_by(username=new_user.username).first()
-        if user:
+        
+        temp_user = models.User.query.filter_by(username=new_user.username).first()
+        if temp_user:
             return jsonify({"message": "User already exists."}), 400
         if not new_user.current_token:
             return jsonify({"message": "Passwords don't match."}), 400
+
         db.session.add(new_user)
         db.session.commit()
 
@@ -65,17 +69,67 @@ def register():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    return render_template("index.html")
+    if request.method == "GET":
+        return render_template("login.html"), 200
+    if request.method == "POST":
+        req = request.form
+        username = req.get("username", None)
+        password = req.get("password", None)
+        
+        if not username:
+            return jsonify({"message": "Username is required."}), 400
+        if not password:
+            return jsonify({"message": "Password is required."}), 400
+
+        temp_user = models.User.query.filter_by(username=username).first()
+
+        if not temp_user:
+            return jsonify({"message": "User not found."}), 400
+
+        if not temp_user.password == password:
+            return jsonify({"message": "Invalid password."}), 400
+
+        user = temp_user
+        access_token = create_access_token(identity=user.username)
+        decoded = jwt_decode.decode(access_token, verify=False)
+        user.current_token = decoded["jti"]
+        db.session.commit()
+    return jsonify({"message": "Success"}), 200
 
 @app.route("/logout", methods=["DELETE"])
 @jwt_required
 def logout():
     """Endpoint for revoking the current users access token"""
     jti = get_raw_jwt().get("jti")
-    u = User.query.filter_by(current_token=jti)
-    u.current_token = None
+    user = models.User.query.filter_by(current_token=jti)
+    user.current_token = None
     db.session.commit()
-    return jsonify({"msg": "Successfully logged out"}), 200
+    return jsonify({"message": "Successfully logged out"}), 200
+
+@app.route("/protected", methods=["GET"])
+@jwt_required
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
+@app.route("/match", methods=["POST", "GET"])
+def match():
+    match = models.Friend('test', 'test', 'test')
+    db.session.add(new_user)
+    db.session.commit()
+    return redirect(url_for("/friends", match=match)), 200
+    
+@app.route("/users", methods=["GET"])
+def get_users():
+    """
+    Endpoint that returns all users
+
+    responses:
+        200:
+        all users as list
+    """
+    users = models.User.query.all()
+    return jsonify([user.to_dict() for user in users])
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
