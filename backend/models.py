@@ -87,6 +87,4 @@ class Blacklist(db.Model):
 	jwt_token = db.Column(db.String, unique=True, nullable=False, primary_key=True)
 
 
-def jti(username):
-	return User.query.filter_by(username=username).current_token
 
