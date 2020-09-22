@@ -6,7 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite:///app.db', echo=True)
-Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine, autoflush=False)
 session = Session()
 Base = declarative_base()
 Base.metadata.create_all(engine)
@@ -26,5 +26,5 @@ if not os.path.exists("app.db"):
 print("Connecting to db")
 conn = sqlite3.connect("app.db")
 print("Saving data to db")
-conn.execute('CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, current_token TEXT, name TEXT, birthday TEXT, gender TEXT, email TEXT, created TEXT, user_languages TEXT, match_languages TEXT, friends TEXT)')
+conn.execute('CREATE TABLE IF NOT EXISTS user (id INT, username TEXT, password TEXT, current_token TEXT, name TEXT, birthday TEXT, gender TEXT, email TEXT, created TEXT, user_languages TEXT, match_languages TEXT, friends TEXT)')
 conn.execute('CREATE TABLE IF NOT EXISTS friend (id INT, username TEXT, name TEXT, languages TEXT, user_id TEXT)')

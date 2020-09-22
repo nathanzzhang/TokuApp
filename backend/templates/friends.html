@@ -1,0 +1,76 @@
+{% extends 'base.html'%}
+
+{%block head %}
+
+{% endblock %}
+
+{% block content %}
+
+<h1> Friends </h1>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="">Tōku</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/profile" onclick='get_current_token("/profile");'>Profile <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/match" onclick='get_current_token("/match");'>Matches</a>
+            <a class="nav-item nav-link" href="/friends" onclick='get_current_token("/friends");'>Friends</a>
+            <a class="nav-item nav-link" href="#">Help/FAQ</a>
+            <script>
+                function get_current_token(String)
+                {
+                    var get_current_token = '<%= Session["current_token"] %>';
+                    $.post(url, get_current_token);
+                }
+            </script>
+          </div>
+    </div>
+  </nav>
+<form name="Friends" method='POST' action='/friends'></form>
+    <div id="friendsPage">
+        <div id = "friendsDescription">
+            <h2> 
+                Hello! Congratulations on choosing a friend!
+                Here you'll see people who will help you with your language-learning journey.
+                Just look at their email-address and contact them whenever you're ready!
+            </h2>
+        </div>
+        <div id = "friends">
+            <div class="boxed">
+                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
+                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{user_language}} </label>
+                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{match_language}} </label>
+                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>
+            </div> 
+            <div class="boxed">
+                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
+                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>
+                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>
+            </div> 
+            <div class="boxed">
+                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
+                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>       
+                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label> 
+            </div>
+            <div class="boxed">
+                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
+                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>     
+                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>   
+            </div>
+            <div class="boxed">
+                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
+                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>  
+                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>      
+            </div>
+        </div>
+    </div>
+    
+{% endblock%}
+
+

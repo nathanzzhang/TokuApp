@@ -7,8 +7,68 @@
 extends profile.html 
 
 <h1> Matches! </h1>
-
-
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="">Tōku</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" href="/profile" onclick='get_current_token("/profile");'>Profile <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="/match" onclick='get_current_token("/match");'>Matches</a>
+        <a class="nav-item nav-link" href="/friends" onclick='get_current_token("/friends");'>Friends</a>
+        <a class="nav-item nav-link" href="#">Help/FAQ</a>
+        <script>
+            function get_current_token(String)
+            {
+                var get_current_token = '<%= Session["current_token"] %>';
+                $.post(url, get_current_token);
+            }
+        </script>
+      </div>
+    </div>
+  </nav>
+<div id="matchingPage">
+    <div id = "matchingDescription">
+        <h2> 
+            Hello! Congratulations on getting matched!
+            Here you'll see people who you matched with. Take a look at what language you will help them with and which language they will help you with!
+            If you click on the "Add Friend" button, you will be able to communicate with them! 
+        </h2>
+    </div>
+    <div id = "matches">
+        {% for username, match in matches.items() %}
+            {% for user_language, match_language in match.items() %}
+                <div class="boxed">
+                    <label class="matched_attributes" id="name" name="name"> Name: {{username}} </label> 
+                    <label class="matched_attributes" id="myLang" name="myLang"> Your Language: {{user_language}} </label>
+                    <label class="matched_attributes" id="theirLang" name="theirLang"> Their Language: {{match_language}} </label>
+                </div> 
+            {% endfor %}
+        {% endfor %}
+        
+        <!-- <div class="boxed">
+            <label class="matched_attributes" id="name" name="name"> Name: {{name}} </label> 
+            <label class="matched_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+            <label class="matched_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>
+        </div> 
+        <div class="boxed">
+            <label class="matched_attributes" id="name" name="name"> Name: {{name}} </label> 
+            <label class="matched_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+            <label class="matched_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>        
+        </div>
+        <div class="boxed">
+            <label class="matched_attributes" id="name" name="name"> Name: {{name}} </label> 
+            <label class="matched_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+            <label class="matched_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>        
+        </div>
+        <div class="boxed">
+            <label class="matched_attributes" id="name" name="name"> Name: {{name}} </label> 
+            <label class="matched_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
+            <label class="matched_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>        
+        </div> -->
+    </div>
+</div>
 
 {% block content %}
     basic hi
