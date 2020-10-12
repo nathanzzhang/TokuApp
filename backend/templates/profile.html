@@ -55,8 +55,8 @@
       <button type="button" id="Edit" onclick="toggleVisibility()"> Edit Profile </button>
         <form name="Change Attributes" method='POST' action='/profile'>
           <div class="signup" id= "hiddenInputs" style="display:none">
-            <label for="profilePicture"> Change Profile Picture </label>
-            <input type="text" class="form-control" id = "profilePic" name="profilePic" placeholder="sampleImageAddress.com"> <br>
+            <!--label for="profilePicture"> Change Profile Picture </label-->
+            <!--input type="text" class="form-control" id = "profilePic" name="profilePic" placeholder="sampleImageAddress.com"> <br-->
 
             <label for="name">Name</label>
             <input type="text" class="form-control" id = "changeName" name="name" placeholder="New Name"> <br>
@@ -74,7 +74,7 @@
 
             <label for="email address">Email address</label>
             <input type="email" class="form-control" id="changeEmail" name="email" placeholder="example@example.com"><br>
-            <button type="button" id="Submit" onclick="toggleVisibility()"> Submit Changes </button> 
+            <button type="submit" id="Submit" onclick="toggleVisibility()"> Submit Changes </button> 
           </div>
         </form>
     </div>
