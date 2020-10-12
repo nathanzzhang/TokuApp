@@ -202,6 +202,9 @@ def get_friends():
     friends = models.Friend.query.filter_by(user_id=user.username).all()
     return json.dumps([friend.username for friend in friends]), 200
 
+@app.route('/faq', methods=["GET"])
+def faq():
+    return render_template('faq.html')
     
 @app.route("/users", methods=["GET"])
 @login_required
