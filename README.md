@@ -1,6 +1,10 @@
-# HackMIT App
+# Toku App
 
+
+<<<<<<< HEAD
 <img src="https://i.ibb.co/X50TY4G/T-kuLogo.png" alt="with-rails" width="100%" border="0" />
+=======
+>>>>>>> 2d780d7ae8c8f6d474ad60241020b47f20ee11e2
 
 ## Tōku
 

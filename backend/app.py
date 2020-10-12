@@ -77,14 +77,14 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         session['username'] = username
-        print(new_user.created)
+        
     return render_template("languages.html"), 200
 
 @app.route('/languages', methods=["POST", "GET"])
 def languages():
     username = session['username']
     user = models.User.query.filter_by(username=username).first()
-    print(username)
+    
     if request.method == "GET":
         return render_template("languages.html")
     if request.method == "POST":
@@ -93,8 +93,9 @@ def languages():
         match_languages = []
         req = request.form
         for language in default:
-            print(req.get(language+"1"))
-            print(req.get(language+"2"))
+            if DEBUG:
+                print(req.get(language+"1"))
+                print(req.get(language+"2"))
             if(req.get(language + "1")):
                 user_languages.append(language)
             if(req.get(language + "2")):
@@ -102,7 +103,6 @@ def languages():
         if user_languages != [] and match_languages != []:
             user.set_user_languages(str(user_languages).strip('[]'))
             user.set_match_languages(str(match_languages).strip('[]'))
-            print(user.match_languages)
             login_user(user)
             db.session.add(user)
             db.session.commit()
@@ -126,8 +126,6 @@ def login():
             return jsonify({"message": "Password is required."}), 400
 
         user = models.User.query.filter_by(username=username).first()
-        print(user)
-        print(user.match_languages)
         if not user:
             return jsonify({"message": "User not found."}), 400
         if not user.check_password(password):
@@ -176,7 +174,6 @@ def get_matches():
         return current_app.login_manager.unauthorized()
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
-    print(user.match_languages)
     matches = {}
     if "," in user.match_languages:
         match_language_list = list(user.match_languages.split(","))
@@ -186,10 +183,8 @@ def get_matches():
         for match in models.User.query.all(): #for every user in the database
             if match.username is not user.username: #if you are not matched with yourself
                 match_user_languages = list(match.user_languages.split(","))
-                print(match_user_languages)
                 if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
                     matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
-    print(matches)
     return matches
 
 @app.route("/friends", methods=["POST", "GET"])
