@@ -1,0 +1,39 @@
+{% extends 'base.html'%}
+
+{%block head %}
+
+{% endblock %}
+
+{% block content %}
+  <div id="container">
+    <h1> Log In to Tōku</h1>
+    <div id = "loginpage">
+        <form name="Login" method='POST' action='/login'>
+            <p>  
+                <label for="username"> Username: </label>
+                <input type="username" id="username" name="username" placeholder="Username"> 
+            </p>
+            <p>
+                <label for="password"> Password: </label>
+                <input type="password" id="password" name="password" placeholder="Password"> 
+                <input type="checkbox" onclick="showPassword()">Show Password
+                <script>
+                  function showPassword()
+                  {
+                  var x = document.getElementById("password");
+                    if (x.type === "password") 
+                    {
+                      x.type = "text";
+                    } 
+                    else 
+                    {
+                        x.type = "password";
+                    }
+                  }
+                </script>
+            </p>
+            <p>
+                <button class="submitButton" id="submit_Button"> Submit </button>
+            </p>
+  </div>
+{% endblock%}
