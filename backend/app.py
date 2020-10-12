@@ -104,8 +104,6 @@ def languages():
             user.set_user_languages(str(user_languages).strip('[]'))
             user.set_match_languages(str(match_languages).strip('[]'))
             login_user(user)
-            db.session.add(user)
-            db.session.commit()
         else:
             return jsonify({"message": "Must select at least one language for both"})
     return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
