@@ -25,6 +25,8 @@ db.app = app
 db.init_app(app)
 DEBUG = True
 
+
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.session_protection = "strong"
@@ -103,12 +105,13 @@ def languages():
         if user_languages != [] and match_languages != []:
             user.set_user_languages(str(user_languages).strip('[]'))
             user.set_match_languages(str(match_languages).strip('[]'))
-            login_user(user)
-            db.session.add(user)
+            db.session.flush()
             db.session.commit()
+            login_user(user)
+            print(user.match_languages) #for debugging purposes
         else:
             return jsonify({"message": "Must select at least one language for both"})
-    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -131,6 +134,8 @@ def login():
         if not user.check_password(password):
             return jsonify({"message": "Invalid password."}), 400
         login_user(user)
+        print(user.match_languages)
+
     return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
 
 
@@ -159,8 +164,12 @@ def profile():
             user.set_email(req.get('email'))
         if(req.get('gender')):
             user.set_gender(req.get('gender'))
+        if(req.get('user_languages')):
+            user.set_user_languages(req.get('user_languages'))
+        if(req.get('match_languages')):
+            user.set_match_languages(req.get('match_languages'))
     
-    return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
         
 
@@ -174,17 +183,20 @@ def get_matches():
         return current_app.login_manager.unauthorized()
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
+    print(user.match_languages)
     matches = {}
     if "," in user.match_languages:
         match_language_list = list(user.match_languages.split(","))
     else:
         match_language_list = [user.match_languages]
     for language in match_language_list: #for every language that you want to learn
+        print(language)
         for match in models.User.query.all(): #for every user in the database
             if match.username is not user.username: #if you are not matched with yourself
                 match_user_languages = list(match.user_languages.split(","))
                 if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
                     matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
+    print(matches)                
     return matches
 
 @app.route("/friends", methods=["POST", "GET"])
