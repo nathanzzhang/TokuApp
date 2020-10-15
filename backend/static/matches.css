@@ -15,9 +15,13 @@ th {
     color: white;
 }
 
-tr:hover {background-color: #f48b6d;}
+tr:hover {background-color: #f0baab;}
 
-.boxed{
+.button:hover {
+    background-color: #f48b6d;
+    color: white;
+}
+.boxed {
     padding: 70px;
     font-size: 2rem;
     background: #f48b6d;

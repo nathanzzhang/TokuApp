@@ -43,23 +43,26 @@ extends profile.html
                 <tr>
                     <td>{{username}}</td>
                     <td>{{language}}</td>
-                    <td><button class="button" id="friend_button" name="friend_button" onclick='add_friend()'>Add Friend</button></td>
+                    <td><button class="button" id="friend_button" name="friend_button" onclick='addFriend()'>Add Friend</button></td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
-   
-        <!---
-        <div id = "matches">
-            {% for username, language in matches.items() %}
-                <div class="boxed">
-                    <label class="matched_attributes" id="name" name="name"> Name: {{username}} </label> 
-                    <label class="matched_attributes" id="myLang" name="myLang"> Match Language: {{language}} </label>
-                    <button class="button" id="friend_button" name="friend_button" onclick='add_friend()'>Add Friend</button>
-                </div> 
-                
-            {% endfor %}
-        </div>
-        -->
+        <script>
+            function addFriend() {
+                var x = document.getElementById("friend_button");
+                if(x.innerHTML == "Add Friend")
+                {
+                    x.innerHTML = "Friend Added!";
+                    setTimeout(() => {x.innerHTML = "Remove Friend";}, 3000);
+                }
+                else if (x.innerHTML == "Remove Friend")
+                {
+                    x.innerHTML = "Friend Removed!";
+                    setTimeout(() => {x.innerHTML = "Add Friend";}, 3000);
+                }
+            }
+        </script>
+        
     </div>
 {% endblock%}
