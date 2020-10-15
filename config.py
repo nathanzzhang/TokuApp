@@ -26,10 +26,12 @@ conn = sqlite3.connect("app.db")
 print("Saving data to db")
 conn.execute('CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, current_token TEXT, name TEXT, birthday TEXT, gender TEXT, email TEXT, created TEXT, user_languages TEXT, match_languages TEXT, friends TEXT)')
 conn.execute('CREATE TABLE IF NOT EXISTS friend (id INT, username TEXT, name TEXT, languages TEXT, user_id TEXT)')
-cursor1 = conn.cursor()
-nate6="nate6"
-cursor1.execute("SELECT * FROM user")
-result = cursor1.fetchall()
-for r in result:
-    print(r)
+
+#cursor1 = conn.cursor()
+#nate6="nate6"
+#cursor1.execute("SELECT * FROM user")
+#result = cursor1.fetchall()
+#for r in result:
+#    print(r)
+
 
