@@ -19,11 +19,21 @@ from flask_login import (
 app = Flask(__name__)
 
 #load main config
-app.config.from_pyfile('../config.py') 
+app.config.from_pyfile('./config.py') 
 db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
 DEBUG = True
+
+# make data tables
+if not os.path.exists("app.db"):
+    print("db doesn't exist. creating new db")
+    open("app.db", "w+")
+print("Connecting to db")
+conn = sqlite3.connect("app.db", check_same_thread=False)
+conn.execute('CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, current_token TEXT, name TEXT, birthday TEXT, gender TEXT, email TEXT, created TEXT, user_languages TEXT, match_languages TEXT, friends TEXT)')
+conn.execute('CREATE TABLE IF NOT EXISTS friend (id INT, username TEXT, name TEXT, languages TEXT, user_id TEXT)')
+c = conn.cursor()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -93,22 +103,25 @@ def languages():
         match_languages = []
         req = request.form
         for language in default:
-            if DEBUG:
-                print(req.get(language+"1"))
-                print(req.get(language+"2"))
             if(req.get(language + "1")):
                 user_languages.append(language)
             if(req.get(language + "2")):
                 match_languages.append(language)
         if user_languages != [] and match_languages != []:
-            user.set_user_languages(str(user_languages).strip('[]'))
-            user.set_match_languages(str(match_languages).strip('[]'))
-            login_user(user)
-            db.session.add(user)
+            updated_user_languages = ', '.join(user_languages)
+            updated_match_languages = ', '.join(match_languages)
+            user.set_user_languages(updated_user_languages)
+            user.set_match_languages(updated_match_languages)
+            print(updated_user_languages)
+            print(updated_match_languages)
+            c.execute("""UPDATE user SET user_languages='%s' WHERE username='%s'""" % (updated_user_languages, user.username))
+            c.execute("""UPDATE user SET match_languages='%s' WHERE username='%s'""" % (updated_match_languages, user.username))
+            db.session.flush()
             db.session.commit()
+            login_user(user)
         else:
             return jsonify({"message": "Must select at least one language for both"})
-    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -124,14 +137,14 @@ def login():
             return jsonify({"message": "Username is required."}), 400
         if not password:
             return jsonify({"message": "Password is required."}), 400
-
         user = models.User.query.filter_by(username=username).first()
         if not user:
             return jsonify({"message": "User not found."}), 400
         if not user.check_password(password):
             return jsonify({"message": "Invalid password."}), 400
         login_user(user)
-    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    print(c.execute("SELECT * FROM user WHERE username='%s'" % current_user.username).fetchall())
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
 
 @app.route("/logout", methods=["PUT","GET"])
@@ -160,7 +173,7 @@ def profile():
         if(req.get('gender')):
             user.set_gender(req.get('gender'))
     
-    return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
         
 
@@ -180,11 +193,12 @@ def get_matches():
     else:
         match_language_list = [user.match_languages]
     for language in match_language_list: #for every language that you want to learn
-        for match in models.User.query.all(): #for every user in the database
-            if match.username is not user.username: #if you are not matched with yourself
-                match_user_languages = list(match.user_languages.split(","))
-                if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
-                    matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
+        if language != "":
+            for match in models.User.query.all(): #for every user in the database
+                if match.username is not user.username: #if you are not matched with yourself
+                    match_user_languages = list(match.user_languages.split(","))
+                    if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
+                        matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
     return matches
 
 @app.route("/friends", methods=["POST", "GET"])
@@ -211,7 +225,6 @@ def get_users():
 
 if __name__ == '__main__':
     if DEBUG:
-        #db.drop_all()
         db.create_all()
 
         u1 = models.User(username="u1",
