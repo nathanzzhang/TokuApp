@@ -7,7 +7,7 @@
 extends profile.html 
 
 {% block content %}
-    <h1> Matches! </h1>
+    <h1> Matches </h1>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="">Tōku</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@ extends profile.html
             <a class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="/match">Matches</a>
             <a class="nav-item nav-link" href="/friends">Friends</a>
-            <a class="nav-item nav-link" href="/faq">Help/FAQ</a>
+            <a class="nav-item nav-link" href="/faq">About</a>
             <a class="nav-item nav-link" href="/logout">Logout</a>
             </div>
         </div>
@@ -28,10 +28,10 @@ extends profile.html
             <h3> 
                 Hello! Congratulations on getting matched!
             </h3>
-            <h4>
+            <h3>
                 Here you'll see people who you matched with. Take a look at what language you will help them with and which language they will help you with!
                 If you click on the "Add Friend" button, you will be able to communicate with them! 
-            </h4>
+            </h3>
         </div>
         <div id="tblofmatches">
             <table style ="width:100%" id="match_table">

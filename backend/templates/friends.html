@@ -18,7 +18,7 @@
             <a class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="/match">Matches</a>
             <a class="nav-item nav-link" href="/friends">Friends</a>
-            <a class="nav-item nav-link" href="/faq">Help/FAQ</a>
+            <a class="nav-item nav-link" href="/faq">About</a>
             <a class="nav-item nav-link" href="/logout">Logout</a>
         </div>
     </div>
@@ -27,48 +27,44 @@
     <div id="friendsPage">
         <div id = "friendsDescription">
             <h2> 
-                Hello! Congratulations on choosing a friend!
+                
+                Hello! Congratulations on choosing a friend!<br>
                 Here you'll see people who will help you with your language-learning journey.
-                Just look at their email-address and contact them whenever you're ready!
+                Just look at their email address and contact them whenever you're ready!
+                <br>
             </h2>
         </div>
-        <div id = "friends">
+        <!--div id = "friends">
             {% for name, language in friends.items() %}
             <div class="boxed">
                 <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
                 <label class="friends_attributes" id="myLang" name="myLang"> Language: {{language}} </label>
-                <!--label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{match_language}} </label-->
-                <!--label class="friends_attributes" id="email" name="email"> Their Email: {{email_address}} </label-->
             
             {% endfor %}
-            <!--div class="boxed">
-                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
-                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
-                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>
-                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>
-            </div> 
-            <div class="boxed">
-                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
-                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
-                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>       
-                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label> 
+            <button type="button"id="previewButton" class="btn btn-dark" data-toggle="modal" data-target="#preview" onclick="onPreview()">Send Message</button>
             </div>
-            <div class="boxed">
-                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
-                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
-                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>     
-                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>   
-            </div>
-            <div class="boxed">
-                <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
-                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
-                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>  
-                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>      
-            </div-->
-        
-        <button type="button"id="previewButton" class="btn btn-dark" data-toggle="modal" data-target="#preview" onclick="onPreview()">Send Message</button>
-    </div>
-    </div>
+        </div>
+    </div-->
+
+    <div id="tblofmatches">
+        <table style ="width:100%" id="match_table">
+            <tr>
+                <th>Name</th>
+                <th>Match Language</th>
+                <th>Send Message</th>
+            </tr>
+            {% for name, language in friends.items() %}
+            <tr>
+                <div id="row">
+                <td>{{name}}</td>
+                <td>{{language}}</td>
+                <td>
+                    <button type="button"id="previewButton" class="button" data-toggle="modal" data-target="#preview" onclick="onPreview()">Send Message</button>
+                </td>
+                </div>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 
     <div class="modal fade" id="preview" tabindex="-1" role="dialog" aria-labelledby="previewLabel" aria-hidden="true">
@@ -87,8 +83,8 @@
                 <input type="text" class="modal-body" id="modal-text" name="text" placeholder="Type message here."><br>
             </div>
             <div class="modal-footer">
-                <button type="submit" id="send" class="btn btn-secondary" data-dismiss="modal" method="POST" onclick='show();'>Send</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id="send" class="button" data-dismiss="modal" method="POST" onclick='show();'>Send</button>
+                <!--button type="button" class="button" data-dismiss="modal">Close</button-->
                 <script>
                     function show() {
                         var x = document.getElementById("success");

@@ -235,7 +235,7 @@ def friends():
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
     email = user.email
-    match_email = 'u2@gmail.com'
+    match_email = 'toku.user2@gmail.com'
     if request.method == "GET":
         return render_template('friends.html', email=email, match_email=match_email, friends=get_friends()), 200
     if request.method == "POST":
@@ -256,7 +256,7 @@ def friends():
     return render_template("friends.html", email=email, match_email=match_email, friends=get_friends()), 200
 
 def get_friends():
-    friends = {'u2': 'spanish'}
+    friends = {'user2': 'Spanish'}
     return friends
 def get_emails():
     friends = get_friends.keys()
@@ -282,31 +282,43 @@ if __name__ == '__main__':
     if DEBUG:
         db.create_all()
 
-        u1 = models.User(username="u1",
+        user1 = models.User(username="user1",
             password="test",
             current_token="token",
-            name="u1",
+            name="user1",
             birthday="01/10/2000",
             gender="Male",
-            email="u1@gmail.com",
+            email="toku.user1@gmail.com",
             created = str(datetime.datetime.utcnow()),
             user_languages = "English, French, Korean",
             match_languages = "Chinese, Spanish")
-        u1.set_password("test")
+        user1.set_password("test")
         
-        u2 = models.User(username="u2",
+        user2 = models.User(username="user2",
             password="test",
             current_token="token",
-            name="u2",
+            name="user2",
             birthday="05/10/2003",
-            gender="Male",
-            email="u2@gmail.com",
+            gender="Female",
+            email="toku.user2@gmail.com",
             created = str(datetime.datetime.utcnow()),
             user_languages = "Chinese, Spanish",
             match_languages = "English, French, Korean")
-        u2.set_password("test")
+        user2.set_password("test")
+
+        anna = models.User(username="anna",
+            password="password",
+            current_token="token",
+            name="anna",
+            birthday="05/10/2003",
+            gender="Female",
+            email="toku.user2@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Chinese, English",
+            match_languages = "Japanese, French, Korean")
+        anna.set_password("password")
         
-        db.session.add_all([u1, u2])
+        db.session.add_all([user1, user2, anna])
         db.session.commit()
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 
