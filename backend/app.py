@@ -1,12 +1,13 @@
 import os
 import sqlite3
+import smtplib, ssl
 import datetime
 import json
 import models as models
 from flask import Flask, session, request, jsonify, g
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, request, redirect, url_for
-
+from flask_mail import Mail, Message
 
 from flask_login import (
     LoginManager,
@@ -19,11 +20,22 @@ from flask_login import (
 app = Flask(__name__)
 
 #load main config
-app.config.from_pyfile('../config.py') 
+app.config.from_pyfile('./config.py') 
+mail = Mail(app)
 db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
 DEBUG = True
+
+# make data tables
+if not os.path.exists("app.db"):
+    print("db doesn't exist. creating new db")
+    open("app.db", "w+")
+print("Connecting to db")
+conn = sqlite3.connect("app.db", check_same_thread=False)
+conn.execute('CREATE TABLE IF NOT EXISTS user (username TEXT, password TEXT, current_token TEXT, name TEXT, birthday TEXT, gender TEXT, email TEXT, created TEXT, user_languages TEXT, match_languages TEXT, friends TEXT)')
+conn.execute('CREATE TABLE IF NOT EXISTS friend (id INT, username TEXT, name TEXT, languages TEXT, user_id TEXT)')
+c = conn.cursor()
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -77,14 +89,14 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         session['username'] = username
-        print(new_user.created)
+        
     return render_template("languages.html"), 200
 
 @app.route('/languages', methods=["POST", "GET"])
 def languages():
     username = session['username']
     user = models.User.query.filter_by(username=username).first()
-    print(username)
+    
     if request.method == "GET":
         return render_template("languages.html")
     if request.method == "POST":
@@ -93,22 +105,25 @@ def languages():
         match_languages = []
         req = request.form
         for language in default:
-            print(req.get(language+"1"))
-            print(req.get(language+"2"))
             if(req.get(language + "1")):
                 user_languages.append(language)
             if(req.get(language + "2")):
                 match_languages.append(language)
         if user_languages != [] and match_languages != []:
-            user.set_user_languages(str(user_languages).strip('[]'))
-            user.set_match_languages(str(match_languages).strip('[]'))
-            print(user.match_languages)
-            login_user(user)
-            db.session.add(user)
+            updated_user_languages = ', '.join(user_languages)
+            updated_match_languages = ', '.join(match_languages)
+            user.set_user_languages(updated_user_languages)
+            user.set_match_languages(updated_match_languages)
+            print(updated_user_languages)
+            print(updated_match_languages)
+            c.execute("""UPDATE user SET user_languages='%s' WHERE username='%s'""" % (updated_user_languages, user.username))
+            c.execute("""UPDATE user SET match_languages='%s' WHERE username='%s'""" % (updated_match_languages, user.username))
+            db.session.flush()
             db.session.commit()
+            login_user(user)
         else:
             return jsonify({"message": "Must select at least one language for both"})
-    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -124,16 +139,14 @@ def login():
             return jsonify({"message": "Username is required."}), 400
         if not password:
             return jsonify({"message": "Password is required."}), 400
-
         user = models.User.query.filter_by(username=username).first()
-        print(user)
-        print(user.match_languages)
         if not user:
             return jsonify({"message": "User not found."}), 400
         if not user.check_password(password):
             return jsonify({"message": "Invalid password."}), 400
         login_user(user)
-    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    #print(c.execute("SELECT * FROM user WHERE username='%s'" % current_user.username).fetchall())
+    return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
 
 @app.route("/logout", methods=["PUT","GET"])
@@ -161,46 +174,97 @@ def profile():
             user.set_email(req.get('email'))
         if(req.get('gender')):
             user.set_gender(req.get('gender'))
+        if(req.get('user_languages')):
+            user.set_user_languages(req.get('user_languages'))
+        if(req.get('match_languages')):
+            user.set_match_languages(req.get('match_languages'))
     
-    return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created), 200
+    return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
-        
+    
 
 @app.route("/match", methods=["POST", "GET"])
 @login_required 
 def match():
-    return render_template("matchpage.html", matches=get_matches())
+    if not current_user.is_authenticated:
+        return current_app.login_manager.unauthorized()
+    username = current_user.username
+    user = models.User.query.filter_by(username=username).first()
+    if request.method == "GET":
+        return render_template("matchpage.html", matches=get_matches())
+    if request.method == "POST":
+        current_friends=""
+        if user.friends:
+            current_friends = str(user.friends) 
+        #current_friends = (str)request.get_json() + ", " #fix this later
+        print(current_friends)
+        c.execute("""UPDATE user SET friends='%s' WHERE username='%s'""" % (current_friends, username))
+        
+        return render_template("matchpage.html", matches=get_matches())
 
 def get_matches():
     if not current_user.is_authenticated:
         return current_app.login_manager.unauthorized()
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
-    print(user.match_languages)
+    #print(user.match_languages)
     matches = {}
     if "," in user.match_languages:
         match_language_list = list(user.match_languages.split(","))
     else:
         match_language_list = [user.match_languages]
     for language in match_language_list: #for every language that you want to learn
+        print(language)
         for match in models.User.query.all(): #for every user in the database
             if match.username is not user.username: #if you are not matched with yourself
+                if user.friends:
+                    if match.username in list(user.friends.split(",")):
+                        break
                 match_user_languages = list(match.user_languages.split(","))
-                print(match_user_languages)
                 if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
                     matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
-    print(matches)
+    print(matches) 
+    print(user.friends)               
     return matches
 
 @app.route("/friends", methods=["POST", "GET"])
 @login_required
-def get_friends():
+def friends():
     if not current_user.is_authenticated:
         return current_app.login_manager.unauthorized()
-    user = current_user
-    #user = models.User.query.filter_by(current_token=current_token).first()
-    friends = models.Friend.query.filter_by(user_id=user.username).all()
-    return json.dumps([friend.username for friend in friends]), 200
+    username = current_user.username
+    user = models.User.query.filter_by(username=username).first()
+    email = user.email
+    match_email = 'tokuappuser2@gmail.com'
+    if request.method == "GET":
+        return render_template('friends.html', email=email, match_email=match_email, friends=get_friends()), 200
+    if request.method == "POST":
+        sender = email
+        if DEBUG:
+            sender = 'toku.user1@gmail.com'
+            recipient_test="tokuappuser2@gmail.com"
+        password = 'tokutest1!'
+        print(password)
+        subject = "Toku friend message"
+        text = request.form.get("text") 
+        print(text)
+        message = "Subject: {}\n\n{}".format(subject, text)
+        smtp_server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        smtp_server.login(sender, password)
+        smtp_server.sendmail(sender, recipient_test, message.encode('utf8'))
+        smtp_server.close()
+    return render_template("friends.html", email=email, match_email=match_email, friends=get_friends()), 200
+
+def get_friends():
+    friends = {'user2': 'Spanish'}
+    return friends
+def get_emails():
+    friends = get_friends.keys()
+    match_emails = {}
+    for friend in friends:
+        match_emails[friend] = models.User.query.filter_by(username=friend).first().email
+    return match_emails
+    
 
 @app.route('/faq', methods=["GET"])
 def faq():
@@ -216,34 +280,105 @@ def get_users():
 
 if __name__ == '__main__':
     if DEBUG:
-        #db.drop_all()
         db.create_all()
 
-        u1 = models.User(username="u1",
+        user1 = models.User(username="user1",
             password="test",
             current_token="token",
-            name="u1",
-            birthday="XX/XX/XXXX",
+            name="user1",
+            birthday="01/10/2000",
             gender="Male",
-            email="u1@gmail.com",
+            email="toku.user1@gmail.com",
             created = str(datetime.datetime.utcnow()),
             user_languages = "English, French, Korean",
             match_languages = "Chinese, Spanish")
-        u1.set_password("test")
+        user1.set_password("test")
         
-        u2 = models.User(username="u2",
+        user2 = models.User(username="user2",
             password="test",
             current_token="token",
-            name="u2",
-            birthday="XX/XX/XXXX",
-            gender="Male",
-            email="u2@gmail.com",
+            name="user2",
+            birthday="05/10/2003",
+            gender="Female",
+            email="toku.user2@gmail.com",
             created = str(datetime.datetime.utcnow()),
-            user_languages = "Chinese, Spanish",
+            user_languages = "Chinese, Spanish, French",
             match_languages = "English, French, Korean")
-        u2.set_password("test")
+        user2.set_password("test")
+
+        anna = models.User(username="anna",
+            password="password",
+            current_token="token",
+            name="Anna Zhao",
+            birthday="02/19/2003",
+            gender="Female",
+            email="annaazhao@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Chinese, English, French",
+            match_languages = "Japanese, Korean")
+        anna.set_password("password")
+
+        sky = models.User(username="sky",
+            password="password",
+            current_token="token",
+            name="Sky Jung",
+            birthday="04/24/2003",
+            gender="Female",
+            email="skyjung4243@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Chinese, English, Korean",
+            match_languages = "Japanese")
+        sky.set_password("password")
+
+        jeffrey = models.User(username="jeffrey",
+            password="password",
+            current_token="token",
+            name="Jeffrey Mun",
+            birthday="06/17/2003",
+            gender="Male",
+            email="munjeffrey2003@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "English, Korean",
+            match_languages = "Japanese, Chinese, French, Spanish")
+        jeffrey.set_password("password")
+
+        nathan = models.User(username="nathan",
+            password="password",
+            current_token="token",
+            name="Nathan Zhang",
+            birthday="01/16/2003",
+            gender="Male",
+            email="nathanz.zhang@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Chinese, English",
+            match_languages = "Japanese, French, Korean")
+        nathan.set_password("password")
+
+        tyler = models.User(username="tyler",
+            password="password",
+            current_token="token",
+            name="Tyler Kim",
+            birthday="12/08/2003",
+            gender="Male",
+            email="tirekim@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Japanese, Chinese, English, Korean",
+            match_languages = "French")
+        tyler.set_password("password")
+
+        andrea = models.User(username="andrea",
+            password="password",
+            current_token="token",
+            name="Andrea Nguyen",
+            birthday="01/20/2003",
+            gender="Female",
+            email="andreanguyen@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "French, Spanish",
+            match_languages = "Japanese, English, Korean, Chinese")
+        andrea.set_password("password")
         
-        db.session.add_all([u1, u2])
+        db.session.add_all([user1, user2, anna, sky, jeffrey, nathan, tyler, andrea])
         db.session.commit()
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 

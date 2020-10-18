@@ -1,0 +1,50 @@
+#match_table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#match_table th, td {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+
+#match_table th {
+    height: 50px;
+    text-align: center;
+    background-color: #dab27f;
+    color: white;
+}
+
+#match_table2 th {
+    height: 50px;
+    text-align: center;
+    background-color: #94b0b8;
+    color: white;
+}
+
+#match_table tr:hover {background-color: #ecdcc6;} 
+
+#match_table2 tr:hover {background-color: #d0d9db;} 
+
+#matchingDescription {
+    padding: 35px;
+    padding-top: 15px;
+}
+
+.button:hover {
+    background-color: #a5b3d8;
+    color: white;
+}
+
+.button {
+    width: 150px;
+    height: 35px;
+    margin: 2px 2px;
+    text-align: center;
+    vertical-align: middle;
+}
+.boxed {
+    padding: 20px;
+    font-size: 1.5rem;
+    background: #c9ebb5;
+}
