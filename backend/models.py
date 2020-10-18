@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
 	created = db.Column(db.String, nullable=False)
 	user_languages = db.Column(db.String, nullable=False)
 	match_languages = db.Column(db.String, nullable=False)
-	friends = db.relationship("Friend", backref="user")
+	friends = db.Column(db.String)
 
 	def set_name(self, name):
 		self.name = name
