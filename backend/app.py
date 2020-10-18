@@ -196,7 +196,7 @@ def match():
         current_friends=""
         if user.friends:
             current_friends = str(user.friends) 
-        current_friends += request.args.get + ", " #fix this later
+        current_friends += request.get_json() + ", " #fix this later
         print(current_friends)
         c.execute("""UPDATE user SET friends='%s' WHERE username='%s'""" % (current_friends, username))
         
@@ -235,9 +235,9 @@ def friends():
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
     email = user.email
-
+    match_email = 'u2@gmail.com'
     if request.method == "GET":
-        return render_template('friends.html', email_address=email, friends=get_friends()), 200
+        return render_template('friends.html', email=email, match_email=match_email, friends=get_friends()), 200
     if request.method == "POST":
         sender = email
         if DEBUG:
@@ -253,11 +253,17 @@ def friends():
         smtp_server.login(sender, password)
         smtp_server.sendmail(sender, recipient_test, message.encode('utf8'))
         smtp_server.close()
-    return jsonify(message="success"), 200
+    return render_template("friends.html", email=email, match_email=match_email, friends=get_friends()), 200
 
 def get_friends():
     friends = {'u2': 'spanish'}
     return friends
+def get_emails():
+    friends = get_friends.keys()
+    match_emails = {}
+    for friend in friends:
+        match_emails[friend] = models.User.query.filter_by(username=friend).first().email
+    return match_emails
     
 
 @app.route('/faq', methods=["GET"])

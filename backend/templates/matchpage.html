@@ -42,13 +42,16 @@ extends profile.html
                 </tr>
                 {% for username, language in matches.items() %}
                 <tr>
+                    <div id="row">
                     <td>{{username}}</td>
                     <td>{{language}}</td>
                     <td>
                        <form name="{{username}}" method="POST" action='/match'>
-                            <button class="submit" value="{{username}}" id="{{username}}" name="{{username}}" onclick='addFriend()'>Add Friend</button>
+                            
+                            <button class="button" value={{username}} id="user" name="{{username}}" onclick='add()'>Add Friend</button>
                         </form>
                     </td>
+                    </div>
                 </tr>
                 {% endfor %}
             </table>
@@ -69,6 +72,22 @@ extends profile.html
                     window.location.href = "/match/" + resp["responseJSON"];
                 });
                 */
+            }
+            function add(){
+                $.ajax({
+                type: "POST",
+                url: "/match",
+                contentType: "application/json",
+                data: JSON.stringify($('#user').val()),
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+                });
+                
             }
         </script>
         
