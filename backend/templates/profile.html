@@ -8,37 +8,44 @@
 
   <h1>Profile</h1>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="">Tōku</a>
+    <a class="navbar-brand" href=""> <img src = https://i.ibb.co/9wMy55x/toku-logo-v2.png%22></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="/match">Matches</a>
-        <a class="nav-item nav-link" href="/friends">Friends</a>
-        <a class="nav-item nav-link" href="/faq">About</a>
-        <a class="nav-item nav-link" href="/logout">Logout</a>
+        <a id = "navbar_items" class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
+        <a id = "navbar_items" class="nav-item nav-link" href="/match">Matches</a>
+        <a id = "navbar_items" class="nav-item nav-link" href="/friends">Friends</a>
+        <a id = "navbar_items" class="nav-item nav-link" href="/faq">About</a>
+        <a id = "navbar_items" class="nav-item nav-link" href="/logout">Logout</a>
       </div>
     </div>
   </nav>
   <div id="profile_container">
     <div class="circular"> 
-        <img src = "{{image_address}}"> <br>
+        <img src = "https://64.media.tumblr.com/3ebb78927254430ccb6060557e8bf49a/tumblr_oiieocCmJI1ul5fqko1_250.jpg"> <br>
     </div>
-    
-    <div id="attributes" class="attributes">
-      <label class="profile_name" id="profile_name"> {{name}} </label><br>
-        <label class="profile_attributes" id="name" name="name"> Name: {{name}} </label> <br>
-        <label class="profile_attributes" id="birthday" name="birthday"> Birthday: {{birthday}} </label><br>
-        <label class="profile_attributes" id="gender" name="gender"> Gender: {{gender}} </label><br>
-        <label class="profile_attributes" id="email" name="email"> Email Address: {{email}} </label><br>
-        <label class="profile_attributes" id="date_created" name="date_created"> Date Created: {{date_created}} </label><br>
-        <label class="profile_attributes" id="user_languages" name="user_languages"> User Languages: {{user_languages}} </label><br>
-        <label class="profile_attributes" id="match_languages" name="match_languages"> Match Languages: {{match_languages}} </label><br>
+    <label class="profile_name" id="profile_name"> {{name}} </label>
+    <div id="attributes">
+        <label class = "profile_tag" id="tag">  Name: </label>
+        <label class="profile_attributes" id="name" name="name"> {{name}} </label> <br>
+        <label class = "profile_tag" id="tag">  Birthday:</label>
+        <label class="profile_attributes" id="birthday" name="birthday"> {{birthday}} </label><br>
+        <label class = "profile_tag" id="tag">  Gender:</label>
+        <label class="profile_attributes" id="gender" name="gender"> {{gender}} </label><br>
+        <label class = "profile_tag" id="tag">  Email Address:</label>
+        <label class="profile_attributes" id="email" name="email"> {{email}} </label><br>
+        <label class = "profile_tag" id="tag">  Date Created:</label>
+        <label class="profile_attributes" id="date_created" name="date_created"> {{date_created}} </label><br>
+        <label class = "profile_tag" id="tag">  User Languages:</label>
+        <label class="profile_attributes" id="user_languages" name="user_languages"> {{user_languages}} </label><br>
+        <label class = "profile_tag" id="tag">  Match Languages:</label>
+        <label class="profile_attributes" id="match_languages" name="match_languages"> {{match_languages}} </label><br>
       </div>
+      <br>
     <div class="editPage" id="editProfilePage" >
-      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Edit');"> Edit Profile </button>
+      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Edit')"> Edit Profile </button>
         <form name="Change Attributes" method='POST' action='/profile'>
           <div class="signup" id= "hiddenInputs" style="display:none">
             <!--label for="profilePicture"> Change Profile Picture </label-->
@@ -60,13 +67,13 @@
 
             <label for="email address">Email address</label>
             <input type="email" class="form-control" id="changeEmail" name="email" placeholder="example@example.com"><br>
-            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Submit')"> Submit Changes </button> 
+            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Submit')"> Submit Changes </button> 
           </div>
         </form>
     </div>
       <script>
         function toggleVisibility(id) {
-          var x = document.getElementById(id);
+          var x = document.getElementById("id");
           if (x.style.display === "none") {
             x.style.display = "block";
           } else {

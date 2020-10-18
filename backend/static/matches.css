@@ -11,18 +11,19 @@
 #match_table th {
     height: 50px;
     text-align: center;
-    background-color: #89C566;
+    background-color: #dab27f;
     color: white;
 }
 
-#match_table tr:hover {background-color: #c9ebb5;} 
+#match_table tr:hover {background-color: #ecdcc6;} 
 
 #matchingDescription {
     padding: 35px;
+    padding-top: 15px;
 }
 
 .button:hover {
-    background-color: #f48b6d;
+    background-color: #a5b3d8;
     color: white;
 }
 

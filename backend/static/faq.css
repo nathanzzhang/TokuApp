@@ -4,10 +4,12 @@
     float: middle;
     width: 25%;
     padding: 70px 0;
+    padding-bottom: 0%;
   }
 
  .row{ 
-   padding: 50x;
+   padding: 5%;
+   padding-top: 0%;
  } 
 /* Clear floats after the columns */
 .row:after {
@@ -17,17 +19,31 @@
 }
 
 
-p3{
+p{
   font-size: 1rem;
+  padding: 10%;
+  margin-top: 30%;
+  width: 20%
 }
 
 .info {
   padding: 50x;
+  width: 70%;
+  text-align: center;
+  margin: auto;
 }
 
 h4 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-top: 50px;
-  padding: 30px;
   text-align: center;
+}
+
+.logo {
+  padding: 10%;
+}
+
+.about_us{
+  text-align: justify;
+  text-justify: inter-word;
 }
