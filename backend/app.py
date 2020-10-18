@@ -1,12 +1,13 @@
 import os
 import sqlite3
+import smtplib, ssl
 import datetime
 import json
 import models as models
 from flask import Flask, session, request, jsonify, g
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template, request, redirect, url_for
-
+from flask_mail import Mail, Message
 
 from flask_login import (
     LoginManager,
@@ -20,6 +21,7 @@ app = Flask(__name__)
 
 #load main config
 app.config.from_pyfile('./config.py') 
+mail = Mail(app)
 db = SQLAlchemy(app)
 db.app = app
 db.init_app(app)
@@ -143,7 +145,7 @@ def login():
         if not user.check_password(password):
             return jsonify({"message": "Invalid password."}), 400
         login_user(user)
-    print(c.execute("SELECT * FROM user WHERE username='%s'" % current_user.username).fetchall())
+    #print(c.execute("SELECT * FROM user WHERE username='%s'" % current_user.username).fetchall())
     return render_template("profile.html", username=user.username, name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
 
@@ -172,6 +174,10 @@ def profile():
             user.set_email(req.get('email'))
         if(req.get('gender')):
             user.set_gender(req.get('gender'))
+        if(req.get('user_languages')):
+            user.set_user_languages(req.get('user_languages'))
+        if(req.get('match_languages')):
+            user.set_match_languages(req.get('match_languages'))
     
     return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
@@ -187,6 +193,7 @@ def get_matches():
         return current_app.login_manager.unauthorized()
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
+    print(user.match_languages)
     matches = {}
     if "," in user.match_languages:
         match_language_list = list(user.match_languages.split(","))
@@ -203,13 +210,36 @@ def get_matches():
 
 @app.route("/friends", methods=["POST", "GET"])
 @login_required
-def get_friends():
+def friends():
     if not current_user.is_authenticated:
         return current_app.login_manager.unauthorized()
-    user = current_user
-    #user = models.User.query.filter_by(current_token=current_token).first()
-    friends = models.Friend.query.filter_by(user_id=user.username).all()
-    return json.dumps([friend.username for friend in friends]), 200
+    username = current_user.username
+    user = models.User.query.filter_by(username=username).first()
+    email = user.email
+
+    if request.method == "GET":
+        return render_template('friends.html', email_address=email, friends=get_friends()), 200
+    if request.method == "POST":
+        sender = email
+        if DEBUG:
+            sender = "toku.user1@gmail.com" #test
+            recipient_test="skyjung4243@gmail.com"
+        password = 'tokutest1!'
+        print(password)
+        subject = "Toku friend message"
+        text = request.form.get("text") 
+        print(text)
+        message = "Subject: {}\n\n{}".format(subject, text)
+        smtp_server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        smtp_server.login(sender, password)
+        smtp_server.sendmail(sender, recipient_test, message.encode('utf8'))
+        smtp_server.close()
+    return jsonify(message="success"), 200
+
+def get_friends():
+    friends = {'u2': 'spanish'}
+    return friends
+    
 
 @app.route('/faq', methods=["GET"])
 def faq():
@@ -231,7 +261,7 @@ if __name__ == '__main__':
             password="test",
             current_token="token",
             name="u1",
-            birthday="XX/XX/XXXX",
+            birthday="01/10/2000",
             gender="Male",
             email="u1@gmail.com",
             created = str(datetime.datetime.utcnow()),
@@ -243,7 +273,7 @@ if __name__ == '__main__':
             password="test",
             current_token="token",
             name="u2",
-            birthday="XX/XX/XXXX",
+            birthday="05/10/2003",
             gender="Male",
             email="u2@gmail.com",
             created = str(datetime.datetime.utcnow()),

@@ -1,0 +1,28 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid black;
+}
+
+th {
+    height: 50px;
+    text-align: center;
+    background-color: #f48b6d;
+    color: white;
+}
+
+tr:hover {background-color: #f0baab;}
+
+.button:hover {
+    background-color: #f48b6d;
+    color: white;
+}
+.boxed {
+    padding: 70px;
+    font-size: 2rem;
+    background: #f48b6d;
+}

@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-
+<!--script type="text/javascript">function add_chatinline(){var hccid=19787301;var nt=document.createElement("script");nt.async=true;nt.src="https://mylivechat.com/chatinline.aspx?hccid="+hccid;var ct=document.getElementsByTagName("script")[0];ct.parentNode.insertBefore(nt,ct);}
+    add_chatinline(); </script-->
 <h1> Friends </h1>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="">Tōku</a>
@@ -14,14 +15,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link" href="/profile" onclick='get_current_token("/profile");'>Profile <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="/match" onclick='get_current_token("/match");'>Matches</a>
-            <a class="nav-item nav-link" href="/friends" onclick='get_current_token("/friends");'>Friends</a>
+            <a class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/match">Matches</a>
+            <a class="nav-item nav-link" href="/friends">Friends</a>
             <a class="nav-item nav-link" href="/faq">Help/FAQ</a>
-          </div>
+            <a class="nav-item nav-link" href="/logout">Logout</a>
+        </div>
     </div>
   </nav>
-<form name="Friends" method='POST' action='/friends'></form>
+
     <div id="friendsPage">
         <div id = "friendsDescription">
             <h2> 
@@ -31,13 +33,15 @@
             </h2>
         </div>
         <div id = "friends">
+            {% for name, language in friends.items() %}
             <div class="boxed">
                 <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
-                <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{user_language}} </label>
-                <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{match_language}} </label>
-                <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>
-            </div> 
-            <div class="boxed">
+                <label class="friends_attributes" id="myLang" name="myLang"> Language: {{language}} </label>
+                <!--label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{match_language}} </label-->
+                <label class="friends_attributes" id="email" name="email"> Their Email: {{email_address}} </label>
+            
+            {% endfor %}
+            <!--div class="boxed">
                 <label class="friends_attributes" id="name" name="name"> Name: {{name}} </label> 
                 <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
                 <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>
@@ -60,7 +64,33 @@
                 <label class="friends_attributes" id="myLang" name="myLang"> Your Language: {{Language}} </label>
                 <label class="friends_attributes" id="theirLang" name="theirLang"> Their Language: {{Language}} </label>  
                 <label class="friends_attributes" id="email" name="email"> Their Email: {{email}} </label>      
+            </div-->
+        
+        <button type="button"id="previewButton" class="btn btn-dark" data-toggle="modal" data-target="#preview" onclick="onPreview()">Send Message</button>
+    </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="preview" tabindex="-1" role="dialog" aria-labelledby="previewLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewLabel">Preview Email</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span> 
+                </button>
             </div>
+            <form name="message" method='POST' action='/friends'>
+             <div class="modal-body" id="previewBody"> 
+                <label for="email address">Email address: {{email_address}}</label>
+                <input type="text" class="modal-body" id="modal-text" name="text" placeholder="Type message here."><br>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-secondary" method="POST">Send</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+            </form>
+        </div>
         </div>
     </div>
     
