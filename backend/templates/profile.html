@@ -37,7 +37,7 @@
         <label class="profile_attributes" id="match_languages" name="match_languages"> Match Languages: {{match_languages}} </label><br>
       </div>
     <div class="editPage" id="editProfilePage" >
-      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Edit')"> Edit Profile </button>
+      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Edit');"> Edit Profile </button>
         <form name="Change Attributes" method='POST' action='/profile'>
           <div class="signup" id= "hiddenInputs" style="display:none">
             <!--label for="profilePicture"> Change Profile Picture </label-->
@@ -59,13 +59,13 @@
 
             <label for="email address">Email address</label>
             <input type="email" class="form-control" id="changeEmail" name="email" placeholder="example@example.com"><br>
-            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Submit')"> Submit Changes </button> 
+            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Submit')"> Submit Changes </button> 
           </div>
         </form>
     </div>
       <script>
         function toggleVisibility(id) {
-          var x = document.getElementById("id");
+          var x = document.getElementById(id);
           if (x.style.display === "none") {
             x.style.display = "block";
           } else {
