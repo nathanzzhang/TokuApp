@@ -17,6 +17,10 @@
 
 #match_table tr:hover {background-color: #c9ebb5;} 
 
+#matchingDescription {
+    padding: 35px;
+}
+
 .button:hover {
     background-color: #f48b6d;
     color: white;
@@ -30,7 +34,7 @@
     vertical-align: middle;
 }
 .boxed {
-    padding: 70px;
-    font-size: 2rem;
-    background: #f48b6d;
+    padding: 20px;
+    font-size: 1.5rem;
+    background: #c9ebb5;
 }

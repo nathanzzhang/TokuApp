@@ -6,7 +6,7 @@
 
 {% block content %}
 
-  <h1>Profile Page</h1>
+  <h1>Profile</h1>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="">Tōku</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -17,7 +17,7 @@
         <a class="nav-item nav-link" href="/profile">Profile <span class="sr-only">(current)</span></a>
         <a class="nav-item nav-link" href="/match">Matches</a>
         <a class="nav-item nav-link" href="/friends">Friends</a>
-        <a class="nav-item nav-link" href="/faq">Help/FAQ</a>
+        <a class="nav-item nav-link" href="/faq">About</a>
         <a class="nav-item nav-link" href="/logout">Logout</a>
       </div>
     </div>
@@ -26,8 +26,9 @@
     <div class="circular"> 
         <img src = "{{image_address}}"> <br>
     </div>
-    <label class="profile_name" id="profile_name"> {{name}} </label>
-    <div id="attributes">
+    
+    <div id="attributes" class="attributes">
+      <label class="profile_name" id="profile_name"> {{name}} </label><br>
         <label class="profile_attributes" id="name" name="name"> Name: {{name}} </label> <br>
         <label class="profile_attributes" id="birthday" name="birthday"> Birthday: {{birthday}} </label><br>
         <label class="profile_attributes" id="gender" name="gender"> Gender: {{gender}} </label><br>
@@ -37,7 +38,7 @@
         <label class="profile_attributes" id="match_languages" name="match_languages"> Match Languages: {{match_languages}} </label><br>
       </div>
     <div class="editPage" id="editProfilePage" >
-      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Edit')"> Edit Profile </button>
+      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Edit');"> Edit Profile </button>
         <form name="Change Attributes" method='POST' action='/profile'>
           <div class="signup" id= "hiddenInputs" style="display:none">
             <!--label for="profilePicture"> Change Profile Picture </label-->
@@ -59,13 +60,13 @@
 
             <label for="email address">Email address</label>
             <input type="email" class="form-control" id="changeEmail" name="email" placeholder="example@example.com"><br>
-            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Submit')"> Submit Changes </button> 
+            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Submit')"> Submit Changes </button> 
           </div>
         </form>
     </div>
       <script>
         function toggleVisibility(id) {
-          var x = document.getElementById("id");
+          var x = document.getElementById(id);
           if (x.style.display === "none") {
             x.style.display = "block";
           } else {
