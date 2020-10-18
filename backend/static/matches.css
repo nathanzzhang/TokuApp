@@ -1,25 +1,33 @@
-table {
+#match_table table {
     width: 100%;
     border-collapse: collapse;
 }
 
-th, td {
+#match_table th, td {
     padding: 10px;
     border-bottom: 1px solid black;
 }
 
-th {
+#match_table th {
     height: 50px;
     text-align: center;
-    background-color: #f48b6d;
+    background-color: #89C566;
     color: white;
 }
 
-tr:hover {background-color: #f0baab;}
+#match_table tr:hover {background-color: #c9ebb5;} 
 
 .button:hover {
     background-color: #f48b6d;
     color: white;
+}
+
+.button {
+    width: 150px;
+    height: 35px;
+    margin: 2px 2px;
+    text-align: center;
+    vertical-align: middle;
 }
 .boxed {
     padding: 70px;

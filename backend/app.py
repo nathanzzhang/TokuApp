@@ -181,12 +181,25 @@ def profile():
     
     return render_template("profile.html",name=user.name, birthday=user.birthday, gender=user.gender, email=user.email, date_created=user.created, user_languages=user.user_languages, match_languages=user.match_languages), 200
 
-        
+    
 
 @app.route("/match", methods=["POST", "GET"])
 @login_required 
 def match():
-    return render_template("matchpage.html", matches=get_matches())
+    if not current_user.is_authenticated:
+        return current_app.login_manager.unauthorized()
+    username = current_user.username
+    user = models.User.query.filter_by(username=username).first()
+    if request.method == "GET":
+        return render_template("matchpage.html", matches=get_matches())
+    if request.method == "POST":
+        current_friends=""
+        if user.friends:
+            current_friends = str(user.friends) 
+        current_friends += username + ", " #fix this later
+        print(current_friends)
+        c.execute("UPDATE user SET friends=%s WHERE username=%s" % current_friends, username)
+        return render_template("matchpage.html", matches=get_matches())
 
 def get_matches():
     if not current_user.is_authenticated:
@@ -200,12 +213,17 @@ def get_matches():
     else:
         match_language_list = [user.match_languages]
     for language in match_language_list: #for every language that you want to learn
-        if language != "":
-            for match in models.User.query.all(): #for every user in the database
-                if match.username is not user.username: #if you are not matched with yourself
-                    match_user_languages = list(match.user_languages.split(","))
-                    if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
-                        matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
+        print(language)
+        for match in models.User.query.all(): #for every user in the database
+            if match.username is not user.username: #if you are not matched with yourself
+                if user.friends:
+                    if match.username in list(user.friends.split(",")):
+                        break
+                match_user_languages = list(match.user_languages.split(","))
+                if language in match_user_languages: #if the language you want to learn is a language that the user is fluent in
+                    matches[match.username] = language #a new element is made with key = username and its value equal to the language dictionary
+    print(matches) 
+    print(user.friends)               
     return matches
 
 @app.route("/friends", methods=["POST", "GET"])
