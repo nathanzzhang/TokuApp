@@ -3,6 +3,9 @@ h1 {
     background-color: #f48b6d;
     text-align: center;
 }
+#container{
+  padding-top: 30px;
+}
 .circular {
     width: 150px;
     height: 150px;
