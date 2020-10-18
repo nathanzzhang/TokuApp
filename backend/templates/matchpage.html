@@ -45,8 +45,8 @@ extends profile.html
                     <td>{{username}}</td>
                     <td>{{language}}</td>
                     <td>
-                       <form name="add_friend" method="POST" action='/match'>
-                            <button class="submit" value="{{username}}" id="{{username}}" name="friend_button" onclick='addFriend()'>Add Friend</button>
+                       <form name="{{username}}" method="POST" action='/match'>
+                            <button class="submit" value="{{username}}" id="{{username}}" name="{{username}}" onclick='addFriend()'>Add Friend</button>
                         </form>
                     </td>
                 </tr>

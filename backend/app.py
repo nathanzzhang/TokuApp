@@ -196,9 +196,10 @@ def match():
         current_friends=""
         if user.friends:
             current_friends = str(user.friends) 
-        current_friends += username + ", " #fix this later
+        current_friends += request.args.get + ", " #fix this later
         print(current_friends)
-        c.execute("UPDATE user SET friends=%s WHERE username=%s" % current_friends, username)
+        c.execute("""UPDATE user SET friends='%s' WHERE username='%s'""" % (current_friends, username))
+        
         return render_template("matchpage.html", matches=get_matches())
 
 def get_matches():
@@ -206,7 +207,7 @@ def get_matches():
         return current_app.login_manager.unauthorized()
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
-    print(user.match_languages)
+    #print(user.match_languages)
     matches = {}
     if "," in user.match_languages:
         match_language_list = list(user.match_languages.split(","))
