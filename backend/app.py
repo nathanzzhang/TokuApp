@@ -196,7 +196,7 @@ def match():
         current_friends=""
         if user.friends:
             current_friends = str(user.friends) 
-        current_friends += request.get_json() + ", " #fix this later
+        #current_friends = (str)request.get_json() + ", " #fix this later
         print(current_friends)
         c.execute("""UPDATE user SET friends='%s' WHERE username='%s'""" % (current_friends, username))
         
@@ -235,14 +235,14 @@ def friends():
     username = current_user.username
     user = models.User.query.filter_by(username=username).first()
     email = user.email
-    match_email = 'toku.user2@gmail.com'
+    match_email = 'tokuappuser2@gmail.com'
     if request.method == "GET":
         return render_template('friends.html', email=email, match_email=match_email, friends=get_friends()), 200
     if request.method == "POST":
         sender = email
         if DEBUG:
-            sender = "toku.user1@gmail.com" #test
-            recipient_test="skyjung4243@gmail.com"
+            sender = 'toku.user1@gmail.com'
+            recipient_test="tokuappuser2@gmail.com"
         password = 'tokutest1!'
         print(password)
         subject = "Toku friend message"
@@ -302,23 +302,83 @@ if __name__ == '__main__':
             gender="Female",
             email="toku.user2@gmail.com",
             created = str(datetime.datetime.utcnow()),
-            user_languages = "Chinese, Spanish",
+            user_languages = "Chinese, Spanish, French",
             match_languages = "English, French, Korean")
         user2.set_password("test")
 
         anna = models.User(username="anna",
             password="password",
             current_token="token",
-            name="anna",
-            birthday="05/10/2003",
+            name="Anna Zhao",
+            birthday="02/19/2003",
             gender="Female",
-            email="toku.user2@gmail.com",
+            email="annaazhao@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Chinese, English, French",
+            match_languages = "Japanese, Korean")
+        anna.set_password("password")
+
+        sky = models.User(username="sky",
+            password="password",
+            current_token="token",
+            name="Sky Jung",
+            birthday="04/24/2003",
+            gender="Female",
+            email="skyjung4243@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Chinese, English, Korean",
+            match_languages = "Japanese")
+        sky.set_password("password")
+
+        jeffrey = models.User(username="jeffrey",
+            password="password",
+            current_token="token",
+            name="Jeffrey Mun",
+            birthday="06/17/2003",
+            gender="Male",
+            email="munjeffrey2003@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "English, Korean",
+            match_languages = "Japanese, Chinese, French, Spanish")
+        jeffrey.set_password("password")
+
+        nathan = models.User(username="nathan",
+            password="password",
+            current_token="token",
+            name="Nathan Zhang",
+            birthday="01/16/2003",
+            gender="Male",
+            email="nathanz.zhang@gmail.com",
             created = str(datetime.datetime.utcnow()),
             user_languages = "Chinese, English",
             match_languages = "Japanese, French, Korean")
-        anna.set_password("password")
+        nathan.set_password("password")
+
+        tyler = models.User(username="tyler",
+            password="password",
+            current_token="token",
+            name="Tyler Kim",
+            birthday="12/08/2003",
+            gender="Male",
+            email="tirekim@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "Japanese, Chinese, English, Korean",
+            match_languages = "French")
+        tyler.set_password("password")
+
+        andrea = models.User(username="andrea",
+            password="password",
+            current_token="token",
+            name="Andrea Nguyen",
+            birthday="01/20/2003",
+            gender="Female",
+            email="andreanguyen@gmail.com",
+            created = str(datetime.datetime.utcnow()),
+            user_languages = "French, Spanish",
+            match_languages = "Japanese, English, Korean, Chinese")
+        andrea.set_password("password")
         
-        db.session.add_all([user1, user2, anna])
+        db.session.add_all([user1, user2, anna, sky, jeffrey, nathan, tyler, andrea])
         db.session.commit()
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 

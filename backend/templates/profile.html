@@ -24,7 +24,7 @@
   </nav>
   <div id="profile_container">
     <div class="circular"> 
-        <img src = "https://64.media.tumblr.com/3ebb78927254430ccb6060557e8bf49a/tumblr_oiieocCmJI1ul5fqko1_250.jpg"> <br>
+        <br><img src = "https://64.media.tumblr.com/3ebb78927254430ccb6060557e8bf49a/tumblr_oiieocCmJI1ul5fqko1_250.jpg"> <br>
     </div>
     <label class="profile_name" id="profile_name"> {{name}} </label>
     <div id="attributes">
@@ -45,19 +45,19 @@
       </div>
       <br>
     <div class="editPage" id="editProfilePage" >
-      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Edit')"> Edit Profile </button>
+      <button type="button" id="Edit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Edit')"> Edit Profile </button>
         <form name="Change Attributes" method='POST' action='/profile'>
           <div class="signup" id= "hiddenInputs" style="display:none">
             <!--label for="profilePicture"> Change Profile Picture </label-->
             <!--input type="text" class="form-control" id = "profilePic" name="profilePic" placeholder="sampleImageAddress.com"> <br-->
 
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id = "changeName" name="name" placeholder="New Name"> <br>
+            <label for="name" class="profile_tag">Name</label>
+            <input type="text" class="form-control" id = "changeName" name="name" placeholder="New Name"> 
 
-            <label for="birthday">Birthday</label>
+            <label for="birthday" class="profile_tag">Birthday</label>
             <input type="date" class="form-control"  name="birthday" placeholder="1/1/2020">
 
-            <label for="gender">Gender</label>
+            <label for="gender" class="profile_tag">Gender</label>
             <select id="changeGender" name="gender">
               <option>Male</option>
               <option>Female</option>
@@ -65,15 +65,15 @@
               <option>Prefer not to answer</option>
             </select> <br>
 
-            <label for="email address">Email address</label>
+            <label for="email address" class="profile_tag">Email address</label>
             <input type="email" class="form-control" id="changeEmail" name="email" placeholder="example@example.com"><br>
-            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs')" onclick="toggleVisibility('Submit')"> Submit Changes </button> 
+            <button type="submit" id="Submit" onclick="toggleVisibility('hiddenInputs'); toggleVisibility('Submit')"> Submit Changes </button> 
           </div>
         </form>
     </div>
       <script>
         function toggleVisibility(id) {
-          var x = document.getElementById("id");
+          var x = document.getElementById(id);
           if (x.style.display === "none") {
             x.style.display = "block";
           } else {

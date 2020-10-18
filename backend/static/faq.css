@@ -10,6 +10,7 @@
  .row{ 
    padding: 5%;
    padding-top: 0%;
+   padding-bottom: 200px;
  } 
 /* Clear floats after the columns */
 .row:after {

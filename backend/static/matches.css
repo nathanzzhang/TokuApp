@@ -15,7 +15,16 @@
     color: white;
 }
 
+#match_table2 th {
+    height: 50px;
+    text-align: center;
+    background-color: #94b0b8;
+    color: white;
+}
+
 #match_table tr:hover {background-color: #ecdcc6;} 
+
+#match_table2 tr:hover {background-color: #d0d9db;} 
 
 #matchingDescription {
     padding: 35px;

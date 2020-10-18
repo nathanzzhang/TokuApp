@@ -28,9 +28,9 @@
         <div id = "friendsDescription">
             <h2> 
                 
-                Hello! Congratulations on choosing a friend!<br>
-                Here you'll see people who will help you with your language-learning journey.
-                Just look at their email address and contact them whenever you're ready!
+                Connect with your matches by sending them a friendly email!<br>
+                Here you'll see people who will help you with your language-learning journey.<br>
+                Just click the "Send Message" button to contact them whenever you're ready.
                 <br>
             </h2>
         </div>
@@ -47,7 +47,7 @@
     </div-->
 
     <div id="tblofmatches">
-        <table style ="width:100%" id="match_table">
+        <table style ="width:100%" id="match_table2">
             <tr>
                 <th>Name</th>
                 <th>Match Language</th>
@@ -59,7 +59,7 @@
                 <td>{{name}}</td>
                 <td>{{language}}</td>
                 <td>
-                    <button type="button"id="previewButton" class="button" data-toggle="modal" data-target="#preview" onclick="onPreview()">Send Message</button>
+                    <button type="button"id="previewButton" class="button" data-toggle="modal" data-target="#preview">Send Message</button>
                 </td>
                 </div>
             </tr>
@@ -77,31 +77,31 @@
                 </button>
             </div>
             <form name="message" method='POST' action='/friends'>
-             <div class="modal-body" id="previewBody"> 
-                <label for="email address">To: {{match_email}}</label><br>
-                <label for="email address">From: {{email}}</label>
-                <input type="text" class="modal-body" id="modal-text" name="text" placeholder="Type message here."><br>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" id="send" class="button" data-dismiss="modal" method="POST" onclick='show();'>Send</button>
-                <!--button type="button" class="button" data-dismiss="modal">Close</button-->
-                <script>
-                    function show() {
-                        var x = document.getElementById("success");
-                        x.style.visibility = "visible";
-                        setTimeout(hide(), 5000);
-                    }
-                    function hide(){
-                        var x = document.getElementById("success");
-                        if (x.style.visibility === "visible") {
-                            x.style.visibility = "hidden";
-                        } else {
-                            x.style.visibility ="visible"
+                <div class="modal-body" id="previewBody"> 
+                    <label for="email address">To: {{match_email}}</label><br>
+                    <label for="email address">From: {{email}}</label>
+                    <input type="text" class="modal-body" id="modal-text" name="text" placeholder="Type message here."><br>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="send" class="button" data-dismiss="modal">Send</button>
+                    <!--button type="button" class="button" data-dismiss="modal">Close</button-->
+                    <script>
+                        function show() {
+                            var x = document.getElementById("success");
+                            x.style.visibility = "visible";
+                            setTimeout(hide(), 5000);
                         }
-                    }
-                    
-                </script>
-            </div>
+                        function hide(){
+                            var x = document.getElementById("success");
+                            if (x.style.visibility === "visible") {
+                                x.style.visibility = "hidden";
+                            } else {
+                                x.style.visibility ="visible"
+                            }
+                        }
+                        
+                    </script>
+                </div>
             </form>
         </div>
         </div>
